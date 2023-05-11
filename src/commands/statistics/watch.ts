@@ -7,6 +7,7 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 import fs from "fs";
+import { CHANNEL_LIMIT } from "../../constants";
 import { Command } from "../../structures/Command";
 import { Channel } from "../../types/Channel";
 import { abbreviate } from "../../utils/abbreviate";
@@ -86,6 +87,16 @@ export default new Command({
             .setColor("Red"),
         ],
       });
+      
+    const serverChannels = fs.readdirSync("./data/channels").filter((file) => (require(`../../../data/channels/${file}`) as Channel).guilds.find((x) => x.id === interaction.guild.id))
+
+    if(serverChannels.length > CHANNEL_LIMIT) return interaction.followUp({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(`This server has reached the limit of ${CHANNEL_LIMIT.toLocaleString()} channels.`)
+            .setColor("Red"),
+        ],
+      }); 
 
     const data = await getChannelData(id);
 
