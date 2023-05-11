@@ -7,6 +7,7 @@
     "start": "ts-node src/index.ts",
     "dev": "nodemon src/index.ts",
     "build": "tsc",
+    "typecheck": "tsc --noEmit",
     "rebuild-and-start": "rimraf ./dist && tsc && node ./dist/index.js"
   },
   "keywords": [],
