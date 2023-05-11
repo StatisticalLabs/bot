@@ -1,5 +1,6 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import fs from "fs";
+import { CHANNEL_LIMIT } from "../../constants";
 import { Command } from "../../structures/Command";
 import { Channel } from "../../types/Channel";
 import { Messages, Reactions } from "../../types/User";
@@ -150,7 +151,7 @@ export default new Command({
                       .map((data) => data?.reactions || 0)
                       .reduce((a, b) => a + b, 0)
                       .toLocaleString()}`,
-                      `**Channels watching**: ${serverChannels.length.toLocaleString()}`
+                    `**Channels watching**: ${serverChannels.length.toLocaleString()}/${CHANNEL_LIMIT.toLocaleString()}`
                   ].join("\n")
                 )
                 .setColor("White"),
