@@ -7,7 +7,7 @@ export default new Event({
   run: (client, channel) => {
     if(!channel.isTextBased() || channel.isDMBased()) return;
 
-    const channels = fs.readdirSync("./data/channels").filter((file) => (require(`../../data/channels/${file}`) as Channel).guilds.find((x) => x.id === channel.guild.id))
+    const channels = fs.readdirSync("./data/channels").filter((file) => (require(`../../data/channels/${file}`) as Channel).guilds.find((x) => x.id === channel.guild.id && x.channel === channel.id))
 
     if(channels && channels.length) {
       for(const ytChannel of channels) {
