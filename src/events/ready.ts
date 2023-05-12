@@ -10,9 +10,9 @@ import fs from "fs";
 import parseMs from "parse-ms";
 import server from "../server";
 import { Event } from "../structures/Event";
-import { Channel } from "../types/Channel";
+import type { Channel } from "../types/Channel";
 import { abbreviate } from "../utils/abbreviate";
-import { checkChannel } from "../utils/checkChannel";
+// import { checkChannel } from "../utils/checkChannel";
 import { getChannelData } from "../utils/getChannelData";
 
 function convertToReadable(timestamp: number) {
@@ -49,7 +49,7 @@ export default new Event({
     //   "America/Los_Angeles"
     // );
 
-    setInterval(checkChannels, 5 * 1000)
+    setInterval(checkChannels, 5 * 1000);
     // setInterval(reverseCheckChannels, 20 * 1000)
 
     // for (const [channelID] of fs.readdirSync("./data/channels").map((channel) => channel.split('.json'))) {
@@ -93,8 +93,9 @@ export default new Event({
               (diffTime / 1000)) *
             (60 * 60 * 24);
 
-          const title = `New subscriber update for ${data.title}${data.handle ? ` (${data.handle})` : ""
-            }`;
+          const title = `New subscriber update for ${data.title}${
+            data.handle ? ` (${data.handle})` : ""
+          }`;
 
           const embed = new EmbedBuilder()
             .setTitle(
@@ -131,25 +132,27 @@ export default new Event({
                   channel.lastAPIUpdate === 0
                     ? 0
                     : new Date().getTime() -
-                    new Date(channel.lastAPIUpdate).getTime()
+                        new Date(channel.lastAPIUpdate).getTime()
                 )}`,
                 inline: true,
               },
               {
-                name: `Subscribers per day ${channel.lastSubsPerDay !== 0
-                  ? subsPerDay - channel.lastSubsPerDay < 0
-                    ? "(⬇️)"
-                    : subsPerDay - channel.lastSubsPerDay === 0
-                      ? ""
-                      : "(⬆️)"
-                  : ""
-                  }`,
-                value: `${abbreviate(subsPerDay)} (${subsPerDay === channel.lastSubsPerDay
-                  ? ""
-                  : subsPerDay - channel.lastSubsPerDay < 0
+                name: `Subscribers per day ${
+                  channel.lastSubsPerDay !== 0
+                    ? subsPerDay - channel.lastSubsPerDay < 0
+                      ? "(⬇️)"
+                      : subsPerDay - channel.lastSubsPerDay === 0
+                        ? ""
+                        : "(⬆️)"
+                    : ""
+                }`,
+                value: `${abbreviate(subsPerDay)} (${
+                  subsPerDay === channel.lastSubsPerDay
                     ? ""
-                    : "+"
-                  }${abbreviate(subsPerDay - channel.lastSubsPerDay)})`,
+                    : subsPerDay - channel.lastSubsPerDay < 0
+                      ? ""
+                      : "+"
+                }${abbreviate(subsPerDay - channel.lastSubsPerDay)})`,
                 inline: true,
               }
             )
@@ -164,7 +167,8 @@ export default new Event({
 
           // backup in case a channel doesn't have a name in the db yet
           // we're saving in the db so I don't need to fetch it 10x in other commands
-          if (!channel.name || channel.name !== data.title) channel.name = data.title;
+          if (!channel.name || channel.name !== data.title)
+            channel.name = data.title;
           channel.lastCount = data.stats.subscriberCount;
           channel.lastAPIUpdate = Date.now();
           channel.lastSubsPerDay = subsPerDay;
@@ -221,7 +225,7 @@ export default new Event({
                 ],
               });
             } catch (err) {
-              console.error(err)
+              console.error(err);
             }
           }
         } catch (err) {

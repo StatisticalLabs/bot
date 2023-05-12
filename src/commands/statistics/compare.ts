@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ChartConfiguration } from "chart.js";
+import type { ChartConfiguration } from "chart.js";
 import { ChartJSNodeCanvas } from "chartjs-node-canvas";
 import {
   AttachmentBuilder,
@@ -8,7 +8,7 @@ import {
 } from "discord.js";
 import fs from "fs";
 import { Command } from "../../structures/Command";
-import { Channel } from "../../types/Channel";
+import type { Channel } from "../../types/Channel";
 import { abbreviate } from "../../utils/abbreviate";
 import { handleUrl, legacyUrl } from "../../utils/regex";
 
@@ -88,6 +88,7 @@ export default new Command({
       interaction.options.getString("channel3"),
     ];
     const ids: string[] = [];
+    // TODO: move this to validateChannel()
     channels.filter(Boolean).forEach(async (query) => {
       if (!query.startsWith("UC")) {
         if (query.match(handleUrl)) {
@@ -138,7 +139,7 @@ export default new Command({
           }
         }
       } else {
-        ids.push(query.replace(/[^0-9a-zA-Z_\-]/, ""));
+        ids.push(query.replace(/[^0-9a-zA-Z_-]/, ""));
       }
     });
 

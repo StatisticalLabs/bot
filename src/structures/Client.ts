@@ -1,17 +1,14 @@
 import InfinityAutoPoster from "@infinitybots/autoposter";
-import {
+import type {
   ApplicationCommandDataResolvable,
-  Client,
   ClientOptions,
-  Collection,
-  GatewayIntentBits,
-  Partials,
 } from "discord.js";
+import { Client, Collection, GatewayIntentBits, Partials } from "discord.js";
 import fs from "fs";
 import path from "path";
 import { DJSPoster as TopggAutoPoster } from "topgg-autoposter";
 import { env } from "../utils/env";
-import { CommandData } from "./Command";
+import type { CommandData } from "./Command";
 
 type BotOptions = Omit<ClientOptions, "intents" | "partials">;
 
@@ -43,15 +40,18 @@ export class BotClient<Ready extends boolean = boolean> extends Client<Ready> {
       );
     }
 
-    if(env.INFINITYBOTS_TOKEN) {
+    if (env.INFINITYBOTS_TOKEN) {
       const infinityPoster = InfinityAutoPoster(env.INFINITYBOTS_TOKEN, this, {
-        startNow: true
-      })
-      infinityPoster.on("posted", () => console.log("Posted stats to Infinity Bots API."))
+        startNow: true,
+      });
+      infinityPoster.on("posted", () =>
+        console.log("Posted stats to Infinity Bots API.")
+      );
     }
   }
 
   async register() {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     async function registerCommands() {
       const commands: ApplicationCommandDataResolvable[] = [];

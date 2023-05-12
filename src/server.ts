@@ -1,7 +1,7 @@
 import cors from "cors";
 import express from "express";
-import { BotClient } from "./structures/Client";
-import { Channel } from "./types/Channel";
+import type { BotClient } from "./structures/Client";
+import type { Channel } from "./types/Channel";
 
 const app = express().use(cors());
 
@@ -11,7 +11,9 @@ export default (_client: BotClient) => {
     let data: Channel | null = null;
     try {
       data = require(`./data/channels/${id}.json`) as Channel;
-    } catch {}
+    } catch {
+      // data is null
+    }
     if (!data)
       return res.status(404).json({
         status: 404,

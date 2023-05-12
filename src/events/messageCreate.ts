@@ -1,6 +1,6 @@
 import fs from "fs";
 import { Event } from "../structures/Event";
-import { Messages } from "../types/User";
+import type { Messages } from "../types/User";
 
 export default new Event({
   name: "messageCreate",
@@ -10,7 +10,9 @@ export default new Event({
     let data: Messages | null = null;
     try {
       data = require(`../../data/messages/${message.author.id}-${message.guild.id}.json`);
-    } catch {}
+    } catch {
+      // data is null
+    }
 
     if (!data)
       fs.writeFileSync(

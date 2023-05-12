@@ -8,7 +8,7 @@ import {
 } from "discord.js";
 import fs from "fs";
 import { Command } from "../../structures/Command";
-import { Channel } from "../../types/Channel";
+import type { Channel } from "../../types/Channel";
 import { abbreviate } from "../../utils/abbreviate";
 
 export default new Command({
@@ -57,10 +57,10 @@ export default new Command({
         ],
       });
 
-    let embeds: EmbedBuilder[] = [];
+    const embeds: EmbedBuilder[] = [];
     let k = 10;
     for (let i = 0; i < allChannels.length; i += 10) {
-      let chnls = allChannels;
+      const chnls = allChannels;
       const current = chnls
         .sort((a, b) => b.lastCount - a.lastCount)
         .slice(i, k);

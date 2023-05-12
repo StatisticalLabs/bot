@@ -1,11 +1,11 @@
-import {
+import type {
   AutocompleteInteraction,
   ChatInputCommandInteraction,
   GuildMember,
   SlashCommandBuilder,
   SlashCommandSubcommandsOnlyBuilder,
 } from "discord.js";
-import { BotClient } from "../structures/Client";
+import type { BotClient } from "../structures/Client";
 
 export interface Interaction extends ChatInputCommandInteraction<"cached"> {
   member: GuildMember;

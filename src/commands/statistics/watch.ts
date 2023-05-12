@@ -1,5 +1,4 @@
-import axios, { AxiosResponse } from "axios";
-import { CronJob } from "cron";
+import axios, { type AxiosResponse } from "axios";
 import {
   ChannelType,
   EmbedBuilder,
@@ -9,11 +8,10 @@ import {
 import fs from "fs";
 import { CHANNEL_LIMIT } from "../../constants";
 import { Command } from "../../structures/Command";
-import { Channel } from "../../types/Channel";
+import type { Channel } from "../../types/Channel";
 import { abbreviate } from "../../utils/abbreviate";
-import { checkChannel } from "../../utils/checkChannel";
+// import { checkChannel } from "../../utils/checkChannel";
 import { getChannelData } from "../../utils/getChannelData";
-import { handleUrl, legacyUrl } from "../../utils/regex";
 import { validateChannel } from "../../utils/validateChannel";
 
 export default new Command({
@@ -54,7 +52,7 @@ export default new Command({
       }))
     );
   },
-  run: async ({ client, interaction }) => {
+  run: async ({ /* client, */ interaction }) => {
     await interaction.deferReply({
       ephemeral: true,
     });
@@ -87,16 +85,25 @@ export default new Command({
             .setColor("Red"),
         ],
       });
-      
-    const serverChannels = fs.readdirSync("./data/channels").filter((file) => (require(`../../../data/channels/${file}`) as Channel).guilds.find((x) => x.id === interaction.guild.id))
 
-    if(serverChannels.length > CHANNEL_LIMIT) return interaction.followUp({
+    const serverChannels = fs
+      .readdirSync("./data/channels")
+      .filter((file) =>
+        (require(`../../../data/channels/${file}`) as Channel).guilds.find(
+          (x) => x.id === interaction.guild.id
+        )
+      );
+
+    if (serverChannels.length > CHANNEL_LIMIT)
+      return interaction.followUp({
         embeds: [
           new EmbedBuilder()
-            .setDescription(`This server has reached the limit of ${CHANNEL_LIMIT.toLocaleString()} channels.`)
+            .setDescription(
+              `This server has reached the limit of ${CHANNEL_LIMIT.toLocaleString()} channels.`
+            )
             .setColor("Red"),
         ],
-      }); 
+      });
 
     const data = await getChannelData(id);
 
@@ -117,8 +124,7 @@ export default new Command({
           2
         )
       );
-    }
-    else {
+    } else {
       const data = require(`../../../data/channels/${id}.json`) as Channel;
       if (
         data.guilds.find(
@@ -160,8 +166,9 @@ export default new Command({
     });
 
     channel.send({
-      content: `📈 **${interaction.user.tag}** started tracking **${data.title
-        }**${data.handle ? ` (${data.handle})` : ""}.`,
+      content: `📈 **${interaction.user.tag}** started tracking **${
+        data.title
+      }**${data.handle ? ` (${data.handle})` : ""}.`,
     });
   },
 });

@@ -1,6 +1,6 @@
 import fs from "fs";
 import { Event } from "../structures/Event";
-import { Reactions } from "../types/User";
+import type { Reactions } from "../types/User";
 
 export default new Event({
   name: "messageReactionAdd",
@@ -19,7 +19,9 @@ export default new Event({
       data = require(`../../data/reactions/${user.id}-${
         reaction.message.guild!.id
       }.json`);
-    } catch {}
+    } catch {
+      // data is null
+    }
 
     if (!data)
       fs.writeFileSync(
