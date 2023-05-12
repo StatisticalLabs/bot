@@ -1,8 +1,7 @@
 name: CI
 on:
   push:
-    branches: ['**']
-    paths: ['src/**']
+    branches: ["**"]
 
 jobs:
   typecheck:
@@ -12,6 +11,16 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16.x
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            src:
+              - 'src/**'
 
-      - run: npm install
-      - run: npm run typecheck
+      - name: Install dependencies
+        if: steps.changes.outputs.src == 'true'
+        run: npm install
+      - name: Check types
+        if: steps.changes.outputs.src == 'true'
+        run: npm run typecheck
