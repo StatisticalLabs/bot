@@ -1,8 +1,8 @@
 name: CI
 on:
   push:
-    branches:
-      - '**'
+    branches: ['**']
+    paths: ['src/**']
 
 jobs:
   typecheck:
