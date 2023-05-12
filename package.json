@@ -8,6 +8,7 @@
     "dev": "nodemon src/index.ts",
     "build": "tsc",
     "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
     "rebuild-and-start": "rimraf ./dist && tsc && node ./dist/index.js"
   },
   "keywords": [],
