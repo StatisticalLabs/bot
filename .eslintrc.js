@@ -16,8 +16,9 @@ module.exports = {
     quotes: ["error", "double"],
     semi: ["error", "always"],
     "quote-props": ["error", "as-needed"],
-    "prefer-const": ["error"],
-    "no-var": ["error"],
+    "prefer-const": "error",
+    "no-var": "error",
+    "no-async-promise-executor": "off",
     "@typescript-eslint/array-type": "error",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/consistent-type-assertions": "error",
@@ -29,5 +30,6 @@ module.exports = {
         argsIgnorePattern: "^_",
       },
     ],
+    "@typescript-eslint/no-explicit-any": "off",
   },
 };

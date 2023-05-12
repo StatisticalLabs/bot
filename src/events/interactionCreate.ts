@@ -1,5 +1,6 @@
-import { ChartConfiguration } from "chart.js";
+import type { ChartConfiguration } from "chart.js";
 import { ChartJSNodeCanvas } from "chartjs-node-canvas";
+import type { GuildMember } from "discord.js";
 import {
   ActionRowBuilder,
   AttachmentBuilder,
@@ -7,12 +8,11 @@ import {
   ButtonStyle,
   ComponentType,
   EmbedBuilder,
-  GuildMember,
 } from "discord.js";
 import fs from "fs";
-import { Interaction } from "../structures/Command";
+import type { Interaction } from "../structures/Command";
 import { Event } from "../structures/Event";
-import { Channel } from "../types/Channel";
+import type { Channel } from "../types/Channel";
 import { abbreviate } from "../utils/abbreviate";
 import { getChannelData } from "../utils/getChannelData";
 
@@ -134,9 +134,8 @@ export default new Event({
         const currentCount = parseFloat(info[1]);
         const lastCount = parseFloat(info[2]);
 
-        function getSubsPer(time: number) {
-          return ((currentCount - lastCount) / (diffTime / 1000)) * time;
-        }
+        const getSubsPer = (time: number) =>
+          ((currentCount - lastCount) / (diffTime / 1000)) * time;
 
         const subsPerSecond = getSubsPer(1);
         const subsPerMinute = getSubsPer(60);

@@ -1,1 +1,1 @@
-export const CHANNEL_LIMIT = 250
+export const CHANNEL_LIMIT = 250;

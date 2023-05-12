@@ -4,7 +4,7 @@ export function abbreviate(count: number, withAbbr = true, decimals = 2) {
     else return count.toFixed(decimals);
   }
 
-  var neg = false;
+  let neg = false;
   if (String(count)[0] == "-") {
     neg = true;
     count = ~Number(count) + 1;

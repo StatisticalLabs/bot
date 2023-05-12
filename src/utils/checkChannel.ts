@@ -1,8 +1,13 @@
 import { AxiosError } from "axios";
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from "discord.js";
-import fs from 'fs';
+import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  EmbedBuilder,
+} from "discord.js";
+import fs from "fs";
 import parseMs from "parse-ms";
-import { BotClient } from "../structures/Client";
+import type { BotClient } from "../structures/Client";
 import { abbreviate } from "./abbreviate";
 import { getChannelData } from "./getChannelData";
 
@@ -28,7 +33,7 @@ function convertToReadable(timestamp: number) {
 
 // beta
 export async function checkChannel(client: BotClient<true>, id: string) {
-  const channel = require(`../../data/channels/${id}`)
+  const channel = require(`../../data/channels/${id}`);
 
   try {
     const data = await getChannelData(id).catch(() => null);
@@ -39,12 +44,12 @@ export async function checkChannel(client: BotClient<true>, id: string) {
       new Date().getTime() - new Date(channel.lastAPIUpdate).getTime()
     );
     const subsPerDay =
-      ((data.stats.subscriberCount - channel.lastCount) /
-        (diffTime / 1000)) *
+      ((data.stats.subscriberCount - channel.lastCount) / (diffTime / 1000)) *
       (60 * 60 * 24);
 
-    const title = `New subscriber update for ${data.title}${data.handle ? ` (${data.handle})` : ""
-      }`;
+    const title = `New subscriber update for ${data.title}${
+      data.handle ? ` (${data.handle})` : ""
+    }`;
 
     const embed = new EmbedBuilder()
       .setTitle(
@@ -55,9 +60,7 @@ export async function checkChannel(client: BotClient<true>, id: string) {
         {
           name: "Old API Count",
           value:
-            channel.lastCount === 0
-              ? "None"
-              : abbreviate(channel.lastCount),
+            channel.lastCount === 0 ? "None" : abbreviate(channel.lastCount),
           inline: true,
         },
         {
@@ -80,26 +83,27 @@ export async function checkChannel(client: BotClient<true>, id: string) {
           value: `${convertToReadable(
             channel.lastAPIUpdate === 0
               ? 0
-              : new Date().getTime() -
-              new Date(channel.lastAPIUpdate).getTime()
+              : new Date().getTime() - new Date(channel.lastAPIUpdate).getTime()
           )}`,
           inline: true,
         },
         {
-          name: `Subscribers per day ${channel.lastSubsPerDay !== 0
-            ? subsPerDay - channel.lastSubsPerDay < 0
-              ? "(⬇️)"
-              : subsPerDay - channel.lastSubsPerDay === 0
-                ? ""
-                : "(⬆️)"
-            : ""
-            }`,
-          value: `${abbreviate(subsPerDay)} (${subsPerDay === channel.lastSubsPerDay
-            ? ""
-            : subsPerDay - channel.lastSubsPerDay < 0
+          name: `Subscribers per day ${
+            channel.lastSubsPerDay !== 0
+              ? subsPerDay - channel.lastSubsPerDay < 0
+                ? "(⬇️)"
+                : subsPerDay - channel.lastSubsPerDay === 0
+                  ? ""
+                  : "(⬆️)"
+              : ""
+          }`,
+          value: `${abbreviate(subsPerDay)} (${
+            subsPerDay === channel.lastSubsPerDay
               ? ""
-              : "+"
-            }${abbreviate(subsPerDay - channel.lastSubsPerDay)})`,
+              : subsPerDay - channel.lastSubsPerDay < 0
+                ? ""
+                : "+"
+          }${abbreviate(subsPerDay - channel.lastSubsPerDay)})`,
           inline: true,
         }
       )
@@ -171,12 +175,11 @@ export async function checkChannel(client: BotClient<true>, id: string) {
           ],
         });
       } catch (err) {
-        console.error(err)
+        console.error(err);
       }
     }
   } catch (err) {
-    if (err instanceof AxiosError && err.response?.status === 520)
-      return;
+    if (err instanceof AxiosError && err.response?.status === 520) return;
     console.error(err);
     return;
   }

@@ -1,5 +1,5 @@
-import { ClientEvents } from "discord.js";
-import { BotClient } from "./Client";
+import type { ClientEvents } from "discord.js";
+import type { BotClient } from "./Client";
 
 export interface EventData<K extends keyof ClientEvents> {
   name: K;

@@ -6,13 +6,12 @@ import {
 } from "discord.js";
 import { abbreviate } from "../../utils/abbreviate";
 import { getChannelData } from "../../utils/getChannelData";
-import { handleUrl, legacyUrl } from "../../utils/regex";
 // const channels = require("../../schemas/channels");
-import axios, { AxiosResponse } from "axios";
+import axios, { type AxiosResponse } from "axios";
 import fs from "fs";
 import { Command } from "../../structures/Command";
-import { Channel } from "../../types/Channel";
-import { checkChannel } from "../../utils/checkChannel";
+import type { Channel } from "../../types/Channel";
+// import { checkChannel } from "../../utils/checkChannel";
 import { validateChannel } from "../../utils/validateChannel";
 
 export default new Command({
@@ -53,10 +52,10 @@ export default new Command({
       }))
     );
   },
-  run: async ({ client, interaction }) => {
+  run: async ({ /* client, */ interaction }) => {
     await interaction.deferReply({
-      ephemeral: true
-    })
+      ephemeral: true,
+    });
 
     const query = interaction.options.getString("query", true);
     let id = "";

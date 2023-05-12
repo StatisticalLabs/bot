@@ -9,7 +9,7 @@ export interface ChannelData {
 
 export async function getChannelData(channelID: string): Promise<ChannelData> {
   return new Promise(async (res, rej) => {
-    let { data } = await axios
+    const { data } = await axios
       .get(
         `https://yt.lemnoslife.com/noKey/channels?part=snippet,statistics&id=${channelID}`
       )
