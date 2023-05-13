@@ -1,7 +1,8 @@
 import cors from "cors";
 import express from "express";
-import type { BotClient } from "./structures/Client";
-import type { Channel } from "./types/Channel";
+import type { BotClient } from "./structures/Client.js";
+import type { Channel } from "./types/Channel.js";
+import { readJsonFile } from "./utils/readJsonFile.js";
 
 const app = express().use(cors());
 
@@ -10,7 +11,7 @@ export default (_client: BotClient) => {
     const { id } = req.params;
     let data: Channel | null = null;
     try {
-      data = require(`./data/channels/${id}.json`) as Channel;
+      data = readJsonFile<Channel>(`./data/channels/${id}.json`);
     } catch {
       // data is null
     }

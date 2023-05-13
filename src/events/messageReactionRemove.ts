@@ -1,6 +1,7 @@
 import fs from "fs";
-import { Event } from "../structures/Event";
-import type { Reactions } from "../types/User";
+import { Event } from "../structures/Event.js";
+import type { Reactions } from "../types/User.js";
+import { readJsonFile } from "../utils/readJsonFile.js";
 
 export default new Event({
   name: "messageReactionRemove",
@@ -11,7 +12,7 @@ export default new Event({
 
     let data: Reactions | null = null;
     try {
-      data = require(`../../data/reactions/${user.id}-${
+      data = readJsonFile<Reactions>(`../../data/reactions/${user.id}-${
         reaction.message.guild!.id
       }.json`);
     } catch {

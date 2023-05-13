@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { handleUrl, legacyUrl } from "./regex";
+import { handleUrl, legacyUrl } from "./regex.js";
 
 type ValidatedChannel =
   | { error: false; id: string }

@@ -1,7 +1,8 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import fs from "fs";
-import { Command } from "../../structures/Command";
-import type { Messages, Reactions } from "../../types/User";
+import { Command } from "../../structures/Command.js";
+import type { Messages, Reactions } from "../../types/User.js";
+import { readJsonFile } from "../../utils/readJsonFile.js";
 
 function sort(a: number, b: number) {
   return b > a ? 1 : b === a ? 0 : -1;
@@ -66,16 +67,16 @@ export default new Command({
           .readdirSync("./data/messages")
           .map((user) => ({
             userID: user.split(".json")[0].split("-")[0],
-            ...require(`../../../../data/messages/${user}`),
+            ...readJsonFile<any>(`../../../../data/messages/${user}`),
           }));
         const allReactionUsers = fs
           .readdirSync("./data/reactions")
           .map((user) => ({
             userID: user.split(".json")[0].split("-")[0],
-            ...require(`../../../data/reactions/${user}`),
+            ...readJsonFile<any>(`../../../data/reactions/${user}`),
           }));
 
-        const users: ({ userID: string } & Messages & Reactions)[] = [];
+        const users: ({ userID: string } &Messages & Reactions)[] = [];
         allMessageUsers.forEach((user) => {
           if (users.find((x) => x.userID === user.userID)) {
             const index = users.findIndex((x) => x.userID === user.userID);
@@ -247,7 +248,7 @@ export default new Command({
           )
           .map((user) => ({
             userID: user.split(".json")[0].split("-")[0],
-            ...require(`../../../data/messages/${user}`),
+            ...readJsonFile<any>(`../../../data/messages/${user}`),
           }));
         const allReactionUsers = fs
           .readdirSync("./data/reactions")
@@ -256,7 +257,7 @@ export default new Command({
           )
           .map((user) => ({
             userID: user.split(".json")[0].split("-")[0],
-            ...require(`../../../data/reactions/${user}`),
+            ...readJsonFile<any>(`../../../data/reactions/${user}`),
           }));
 
         const users = [...allMessageUsers];
