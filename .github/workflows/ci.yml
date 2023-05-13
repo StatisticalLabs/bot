@@ -6,6 +6,8 @@ on:
 jobs:
   typecheck:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -26,6 +28,8 @@ jobs:
         run: npm run typecheck
   lint:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
