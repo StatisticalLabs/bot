@@ -7,11 +7,11 @@ import { Client, Collection, GatewayIntentBits, Partials } from "discord.js";
 import fs from "fs";
 import path from "path";
 import { DJSPoster as TopggAutoPoster } from "topgg-autoposter";
-import * as url from "url";
+import { fileURLToPath } from "url";
 import { env } from "../utils/env.js";
 import type { CommandData } from "./Command.js";
 
-const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
+const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 type BotOptions = Omit<ClientOptions, "intents" | "partials">;
 
