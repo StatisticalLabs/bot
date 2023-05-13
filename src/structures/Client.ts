@@ -1,4 +1,4 @@
-import InfinityAutoPoster from "@infinitybots/autoposter";
+import { InfinityAutoPoster } from "@infinitybots/autoposter";
 import type {
   ApplicationCommandDataResolvable,
   ClientOptions,
@@ -7,8 +7,11 @@ import { Client, Collection, GatewayIntentBits, Partials } from "discord.js";
 import fs from "fs";
 import path from "path";
 import { DJSPoster as TopggAutoPoster } from "topgg-autoposter";
-import { env } from "../utils/env";
-import type { CommandData } from "./Command";
+import * as url from "url";
+import { env } from "../utils/env.js";
+import type { CommandData } from "./Command.js";
+
+const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
 type BotOptions = Omit<ClientOptions, "intents" | "partials">;
 

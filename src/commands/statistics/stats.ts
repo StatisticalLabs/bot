@@ -1,9 +1,10 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import fs from "fs";
-import { CHANNEL_LIMIT } from "../../constants";
-import { Command } from "../../structures/Command";
-import type { Channel } from "../../types/Channel";
-import type { Messages, Reactions } from "../../types/User";
+import { CHANNEL_LIMIT } from "../../constants.js";
+import { Command } from "../../structures/Command.js";
+import type { Channel } from "../../types/Channel.js";
+import type { Messages, Reactions } from "../../types/User.js";
+import { readJsonFile } from "../../utils/readJsonFile.js";
 
 export default new Command({
   data: new SlashCommandBuilder()
@@ -56,12 +57,12 @@ export default new Command({
         let serverReactions: Reactions | null = null;
         let globalReactions: Reactions[] | null = null;
         try {
-          serverMessages = require(`../../../data/messages/${user.id}-${interaction.guild.id}.json`);
+          serverMessages = readJsonFile<Messages>(`../../../data/messages/${user.id}-${interaction.guild.id}.json`);
         } catch {
           // serverMessages is null
         }
         try {
-          serverReactions = require(`../../../data/reactions/${user.id}-${interaction.guild.id}.json`);
+          serverReactions = readJsonFile<Reactions>(`../../../data/reactions/${user.id}-${interaction.guild.id}.json`);
         } catch {
           // serverReactions is null
         }
@@ -69,7 +70,7 @@ export default new Command({
           globalMessages = fs
             .readdirSync("./data/messages")
             .filter((file) => file.startsWith(user.id))
-            .map((user) => require(`../../../data/messages/${user}`));
+            .map((user) => readJsonFile<Messages>(`../../../data/messages/${user}`));
         } catch {
           // globalMessages is null
         }
@@ -77,7 +78,7 @@ export default new Command({
           globalReactions = fs
             .readdirSync("./data/reactions")
             .filter((file) => file.startsWith(user.id))
-            .map((user) => require(`../../../data/reactions/${user}`));
+            .map((user) => readJsonFile<Reactions>(`../../../data/reactions/${user}`));
         } catch {
           // globalReactions is null
         }
@@ -129,18 +130,18 @@ export default new Command({
           .filter((file) =>
             file.split(".json")[0].endsWith(interaction.guild.id)
           )
-          .map((user) => require(`../../../data/messages/${user}`));
+          .map((user) => readJsonFile<Messages>(`../../../data/messages/${user}`));
         const serverReactions = fs
           .readdirSync("./data/reactions")
           .filter((file) =>
             file.split(".json")[0].endsWith(interaction.guild.id)
           )
-          .map((user) => require(`../../../data/reactions/${user}`));
+          .map((user) => readJsonFile<Reactions>(`../../../data/reactions/${user}`));
         const serverChannels = fs
           .readdirSync("./data/channels")
           .filter((file) =>
             (
-                require(`../../../data/channels/${file}`) as Channel
+              readJsonFile<Channel>(`../../../data/channels/${file}`)
             ).guilds.find((x) => x.id === interaction.guild.id)
           );
 
@@ -177,7 +178,7 @@ export default new Command({
       {
         const allUsers = fs.readdirSync("./data/messages").map((user) => ({
           userID: user.split(".json")[0].split("-")[0],
-          ...require(`../../../data/messages/${user}`),
+          ...readJsonFile<Messages>(`../../../data/messages/${user}`),
         }));
         const filteredUsers: string[] = [];
         allUsers.forEach((user) => {
@@ -187,7 +188,7 @@ export default new Command({
 
         const allMessages = fs.readdirSync("./data/messages").map((user) => ({
           userID: user.split(".json")[0],
-          ...require(`../../../data/messages/${user}`),
+          ...readJsonFile<Messages>(`../../../data/messages/${user}`),
         }));
 
         const globalMessages = allMessages
@@ -199,7 +200,7 @@ export default new Command({
 
         const allReactions = fs
           .readdirSync("./data/reactions")
-          .map((user) => require(`../../../data/reactions/${user}`))
+          .map((user) => readJsonFile<Reactions>(`../../../data/reactions/${user}`))
           .map((user) => user?.reactions || 0);
 
         interaction.followUp({

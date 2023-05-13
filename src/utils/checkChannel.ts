@@ -7,9 +7,11 @@ import {
 } from "discord.js";
 import fs from "fs";
 import parseMs from "parse-ms";
-import type { BotClient } from "../structures/Client";
-import { abbreviate } from "./abbreviate";
-import { getChannelData } from "./getChannelData";
+import type { BotClient } from "../structures/Client.js";
+import type { Channel } from "../types/Channel.js";
+import { abbreviate } from "./abbreviate.js";
+import { getChannelData } from "./getChannelData.js";
+import { readJsonFile } from "./readJsonFile.js";
 
 function convertToReadable(timestamp: number) {
   const pluralize = (word: string, count: number) =>
@@ -33,7 +35,7 @@ function convertToReadable(timestamp: number) {
 
 // beta
 export async function checkChannel(client: BotClient<true>, id: string) {
-  const channel = require(`../../data/channels/${id}`);
+  const channel = readJsonFile<Channel>(`../../data/channels/${id}`);
 
   try {
     const data = await getChannelData(id).catch(() => null);

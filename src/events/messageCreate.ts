@@ -1,6 +1,7 @@
 import fs from "fs";
-import { Event } from "../structures/Event";
-import type { Messages } from "../types/User";
+import { Event } from "../structures/Event.js";
+import type { Messages } from "../types/User.js";
+import { readJsonFile } from "../utils/readJsonFile.js";
 
 export default new Event({
   name: "messageCreate",
@@ -9,7 +10,7 @@ export default new Event({
 
     let data: Messages | null = null;
     try {
-      data = require(`../../data/messages/${message.author.id}-${message.guild.id}.json`);
+      data = readJsonFile<Messages>(`../../data/messages/${message.author.id}-${message.guild.id}.json`);
     } catch {
       // data is null
     }

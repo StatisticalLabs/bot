@@ -5,7 +5,7 @@ import type {
   SlashCommandBuilder,
   SlashCommandSubcommandsOnlyBuilder,
 } from "discord.js";
-import type { BotClient } from "../structures/Client";
+import type { BotClient } from "../structures/Client.js";
 
 export interface Interaction extends ChatInputCommandInteraction<"cached"> {
   member: GuildMember;

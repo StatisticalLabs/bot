@@ -1,5 +1,5 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
-import { Command } from "../../structures/Command";
+import { Command } from "../../structures/Command.js";
 
 export default new Command({
   data: new SlashCommandBuilder()

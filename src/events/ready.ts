@@ -8,12 +8,13 @@ import {
 } from "discord.js";
 import fs from "fs";
 import parseMs from "parse-ms";
-import server from "../server";
-import { Event } from "../structures/Event";
-import type { Channel } from "../types/Channel";
-import { abbreviate } from "../utils/abbreviate";
+import server from "../server.js";
+import { Event } from "../structures/Event.js";
+import type { Channel } from "../types/Channel.js";
+import { abbreviate } from "../utils/abbreviate.js";
 // import { checkChannel } from "../utils/checkChannel";
-import { getChannelData } from "../utils/getChannelData";
+import { getChannelData } from "../utils/getChannelData.js";
+import { readJsonFile } from "../utils/readJsonFile.js";
 
 function convertToReadable(timestamp: number) {
   const pluralize = (word: string, count: number) =>
@@ -78,7 +79,7 @@ export default new Event({
     async function checkChannels() {
       const allChannels = fs.readdirSync("./data/channels");
       for (const chnl of allChannels) {
-        const channel = require(`../../data/channels/${chnl}`) as Channel;
+        const channel = readJsonFile<Channel>(`../../data/channels/${chnl}`);
         const channelID = chnl.split(".json")[0];
         try {
           const data = await getChannelData(channelID).catch(() => null);

@@ -1,18 +1,18 @@
+import axios, { type AxiosResponse } from "axios";
 import {
   ChannelType,
   EmbedBuilder,
   PermissionFlagsBits,
   SlashCommandBuilder,
 } from "discord.js";
-import { abbreviate } from "../../utils/abbreviate";
-import { getChannelData } from "../../utils/getChannelData";
-// const channels = require("../../schemas/channels");
-import axios, { type AxiosResponse } from "axios";
 import fs from "fs";
-import { Command } from "../../structures/Command";
-import type { Channel } from "../../types/Channel";
-// import { checkChannel } from "../../utils/checkChannel";
-import { validateChannel } from "../../utils/validateChannel";
+import { Command } from "../../structures/Command.js";
+import type { Channel } from "../../types/Channel.js";
+import { abbreviate } from "../../utils/abbreviate.js";
+import { getChannelData } from "../../utils/getChannelData.js";
+// import { checkChannel } from "../../utils/checkChannel.js";
+import { readJsonFile } from "../../utils/readJsonFile.js";
+import { validateChannel } from "../../utils/validateChannel.js";
 
 export default new Command({
   data: new SlashCommandBuilder()
@@ -87,7 +87,7 @@ export default new Command({
         ],
       });
     else {
-      const data = require(`../../../data/channels/${id}.json`) as Channel;
+      const data = readJsonFile<Channel>(`../../../data/channels/${id}.json`);
       if (
         !data.guilds.find(
           (x) => x.id === interaction.guild.id && x.channel === channel.id

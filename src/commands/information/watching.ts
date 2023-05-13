@@ -7,9 +7,10 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 import fs from "fs";
-import { Command } from "../../structures/Command";
-import type { Channel } from "../../types/Channel";
-import { abbreviate } from "../../utils/abbreviate";
+import { Command } from "../../structures/Command.js";
+import type { Channel } from "../../types/Channel.js";
+import { abbreviate } from "../../utils/abbreviate.js";
+import { readJsonFile } from "../../utils/readJsonFile.js";
 
 export default new Command({
   data: new SlashCommandBuilder()
@@ -37,7 +38,7 @@ export default new Command({
       .readdirSync("./data/channels")
       .map((channelID) => ({
         channelID: channelID.split(".json")[0],
-        ...(require(`../../../data/channels/${channelID}`) as Channel),
+        ...(readJsonFile<Channel>(`../../../data/channels/${channelID}`)),
       }))
       .filter((data) => {
         return data.guilds.find(

@@ -6,13 +6,14 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 import fs from "fs";
-import { CHANNEL_LIMIT } from "../../constants";
-import { Command } from "../../structures/Command";
-import type { Channel } from "../../types/Channel";
-import { abbreviate } from "../../utils/abbreviate";
+import { CHANNEL_LIMIT } from "../../constants.js";
+import { Command } from "../../structures/Command.js";
+import type { Channel } from "../../types/Channel.js";
+import { abbreviate } from "../../utils/abbreviate.js";
 // import { checkChannel } from "../../utils/checkChannel";
-import { getChannelData } from "../../utils/getChannelData";
-import { validateChannel } from "../../utils/validateChannel";
+import { getChannelData } from "../../utils/getChannelData.js";
+import { readJsonFile } from "../../utils/readJsonFile.js";
+import { validateChannel } from "../../utils/validateChannel.js";
 
 export default new Command({
   data: new SlashCommandBuilder()
@@ -89,7 +90,7 @@ export default new Command({
     const serverChannels = fs
       .readdirSync("./data/channels")
       .filter((file) =>
-        (require(`../../../data/channels/${file}`) as Channel).guilds.find(
+        (readJsonFile<Channel>(`../../../data/channels/${file}`)).guilds.find(
           (x) => x.id === interaction.guild.id
         )
       );
@@ -125,7 +126,7 @@ export default new Command({
         )
       );
     } else {
-      const data = require(`../../../data/channels/${id}.json`) as Channel;
+      const data = readJsonFile<Channel>(`../../../data/channels/${id}.json`);
       if (
         data.guilds.find(
           (x) => x.id === interaction.guild.id && x.channel === channel.id

@@ -1,5 +1,5 @@
 import { ActivityType } from "discord.js";
-import { BotClient } from "./structures/Client";
+import { BotClient } from "./structures/Client.js";
 
 const client = new BotClient({
   shards: "auto",
