@@ -9,17 +9,22 @@ jobs:
     permissions:
       pull-requests: read
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
-          node-version: 16.x
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
       - uses: dorny/paths-filter@v2
         id: changes
         with:
           filters: |
             src:
               - 'src/**'
-
+      - name: Setup node
+        if: steps.changes.outputs.src == 'true'
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
       - name: Install dependencies
         if: steps.changes.outputs.src == 'true'
         run: npm install
@@ -31,20 +36,44 @@ jobs:
     permissions:
       pull-requests: read
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
-          node-version: 16.x
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
       - uses: dorny/paths-filter@v2
         id: changes
         with:
           filters: |
             src:
               - 'src/**'
-
+      - name: Setup node
+        if: steps.changes.outputs.src == 'true'
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
       - name: Install dependencies
         if: steps.changes.outputs.src == 'true'
         run: npm install
       - name: Lint
         if: steps.changes.outputs.src == 'true'
         run: npm run lint
+  prettify:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - name: Prettify
+        uses: creyD/prettier_action@master
+        with:
+          prettier_options: --write src/**/*.ts
+          only_changed: True
