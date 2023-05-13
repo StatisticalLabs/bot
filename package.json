@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Track your favorite YouTuber's subscriber counts, view statistics about a server and it's users, and more.",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "ts-node src/index.ts",
     "dev": "nodemon src/index.ts",
