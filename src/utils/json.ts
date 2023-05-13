@@ -9,5 +9,8 @@ export function writeToJsonFile<T extends object = object>(
   path: string,
   object: T
 ) {
-  writeFileSync(path, JSON.stringify(object, null, 2));
+  writeFileSync(
+    path.replace(/(?:\.\.\/)+/g, "./"),
+    JSON.stringify(object, null, 2)
+  );
 }
