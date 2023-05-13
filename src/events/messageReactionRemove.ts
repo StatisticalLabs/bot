@@ -1,7 +1,6 @@
-import fs from "fs";
 import { Event } from "../structures/Event.js";
 import type { Reactions } from "../types/User.js";
-import { readJsonFile } from "../utils/readJsonFile.js";
+import { readJsonFile, writeToJsonFile } from "../utils/json.js";
 
 export default new Event({
   name: "messageReactionRemove",
@@ -12,9 +11,9 @@ export default new Event({
 
     let data: Reactions | null = null;
     try {
-      data = readJsonFile<Reactions>(`../../data/reactions/${user.id}-${
-        reaction.message.guild!.id
-      }.json`);
+      data = readJsonFile<Reactions>(
+        `../../data/reactions/${user.id}-${reaction.message.guild!.id}.json`
+      );
     } catch {
       // data is null
     }
@@ -22,9 +21,9 @@ export default new Event({
     if (!data) return;
 
     data.reactions -= 1;
-    fs.writeFileSync(
+    writeToJsonFile(
       `./data/reactions/${user.id}-${reaction.message.guild!.id}.json`,
-      JSON.stringify(data, null, 2)
+      data
     );
   },
 });

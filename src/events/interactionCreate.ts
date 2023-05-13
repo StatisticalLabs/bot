@@ -15,7 +15,7 @@ import { Event } from "../structures/Event.js";
 import type { Channel } from "../types/Channel.js";
 import { abbreviate } from "../utils/abbreviate.js";
 import { getChannelData } from "../utils/getChannelData.js";
-import { readJsonFile } from "../utils/readJsonFile.js";
+import { readJsonFile, writeToJsonFile } from "../utils/json.js";
 
 const width = 400; //px
 const height = 400; //px
@@ -102,10 +102,7 @@ export default new Event({
             (x) => x.id !== interaction.guild!.id
           );
           data.guilds = filteredGuilds;
-          fs.writeFileSync(
-            `./data/channels/${id}.json`,
-            JSON.stringify(data, null, 2)
-          );
+          writeToJsonFile(`./data/channels/${id}.json`, data);
         }
 
         interaction.reply({
@@ -201,8 +198,9 @@ export default new Event({
         collector.on("collect", async (i) => {
           if (i.customId.startsWith("allsubgraph-")) {
             const channelID = i.customId.split("allsubgraph-")[1];
-            const data =
-              readJsonFile<Channel>(`../../data/channels/${channelID}.json`);
+            const data = readJsonFile<Channel>(
+              `../../data/channels/${channelID}.json`
+            );
 
             await i.deferReply({
               ephemeral: true,
@@ -268,8 +266,9 @@ export default new Event({
             });
           } else if (i.customId.startsWith("subsdaygraph-")) {
             const channelID = i.customId.split("subsdaygraph-")[1];
-            const data =
-              readJsonFile<Channel>(`../../data/channels/${channelID}.json`);
+            const data = readJsonFile<Channel>(
+              `../../data/channels/${channelID}.json`
+            );
 
             await i.deferReply({
               ephemeral: true,

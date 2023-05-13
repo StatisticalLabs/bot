@@ -14,7 +14,7 @@ import type { Channel } from "../types/Channel.js";
 import { abbreviate } from "../utils/abbreviate.js";
 // import { checkChannel } from "../utils/checkChannel";
 import { getChannelData } from "../utils/getChannelData.js";
-import { readJsonFile } from "../utils/readJsonFile.js";
+import { readJsonFile, writeToJsonFile } from "../utils/json.js";
 
 function convertToReadable(timestamp: number) {
   const pluralize = (word: string, count: number) =>
@@ -187,10 +187,7 @@ export default new Event({
               count: data.stats.subscriberCount,
               subsPerDay,
             });
-          fs.writeFileSync(
-            `./data/channels/${channelID}.json`,
-            JSON.stringify(channel, null, 2)
-          );
+          writeToJsonFile(`./data/channels/${channelID}.json`, channel);
 
           for (const channelGuild of channel.guilds) {
             const guild = client.guilds.cache.get(channelGuild.id);

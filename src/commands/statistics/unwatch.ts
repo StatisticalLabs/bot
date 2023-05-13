@@ -11,7 +11,7 @@ import type { Channel } from "../../types/Channel.js";
 import { abbreviate } from "../../utils/abbreviate.js";
 import { getChannelData } from "../../utils/getChannelData.js";
 // import { checkChannel } from "../../utils/checkChannel.js";
-import { readJsonFile } from "../../utils/readJsonFile.js";
+import { readJsonFile, writeToJsonFile } from "../../utils/json.js";
 import { validateChannel } from "../../utils/validateChannel.js";
 
 export default new Command({
@@ -107,10 +107,7 @@ export default new Command({
         (x) => x.id !== interaction.guild.id && x.channel !== channel.id
       );
       data.guilds = filteredGuilds;
-      fs.writeFileSync(
-        `./data/channels/${id}.json`,
-        JSON.stringify(data, null, 2)
-      );
+      writeToJsonFile(`./data/channels/${id}.json`, data);
     }
 
     interaction.followUp({

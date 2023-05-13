@@ -10,7 +10,7 @@ import fs from "fs";
 import { Command } from "../../structures/Command.js";
 import type { Channel } from "../../types/Channel.js";
 import { abbreviate } from "../../utils/abbreviate.js";
-import { readJsonFile } from "../../utils/readJsonFile.js";
+import { readJsonFile } from "../../utils/json.js";
 import { handleUrl, legacyUrl } from "../../utils/regex.js";
 
 const width = 400; //px
@@ -52,7 +52,9 @@ export default new Command({
     const focusedValue = interaction.options.getFocused();
     console.log(focusedValue);
     const choices = fs.readdirSync("./data/channels").map((file) => {
-      const channel = readJsonFile<Channel>(`../../../../data/channels/${file}`);
+      const channel = readJsonFile<Channel>(
+        `../../../../data/channels/${file}`
+      );
       return {
         name: channel.name,
         mainCount: channel.lastCount,
@@ -155,8 +157,9 @@ export default new Command({
       });
 
     const data = ids.map((channelID) => {
-      const channel =
-        readJsonFile<Channel>(`../../../../data/channels/${channelID}`);
+      const channel = readJsonFile<Channel>(
+        `../../../../data/channels/${channelID}`
+      );
 
       return channel;
     });

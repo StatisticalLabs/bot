@@ -2,7 +2,7 @@ import cors from "cors";
 import express from "express";
 import type { BotClient } from "./structures/Client.js";
 import type { Channel } from "./types/Channel.js";
-import { readJsonFile } from "./utils/readJsonFile.js";
+import { readJsonFile } from "./utils/json.js";
 
 const app = express().use(cors());
 

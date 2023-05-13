@@ -10,7 +10,7 @@ import fs from "fs";
 import { Command } from "../../structures/Command.js";
 import type { Channel } from "../../types/Channel.js";
 import { abbreviate } from "../../utils/abbreviate.js";
-import { readJsonFile } from "../../utils/readJsonFile.js";
+import { readJsonFile } from "../../utils/json.js";
 
 export default new Command({
   data: new SlashCommandBuilder()
@@ -38,7 +38,7 @@ export default new Command({
       .readdirSync("./data/channels")
       .map((channelID) => ({
         channelID: channelID.split(".json")[0],
-        ...(readJsonFile<Channel>(`../../../data/channels/${channelID}`)),
+        ...readJsonFile<Channel>(`../../../data/channels/${channelID}`),
       }))
       .filter((data) => {
         return data.guilds.find(

@@ -1,7 +1,6 @@
-import fs from "fs";
 import { Event } from "../structures/Event.js";
 import type { Messages } from "../types/User.js";
-import { readJsonFile } from "../utils/readJsonFile.js";
+import { readJsonFile, writeToJsonFile } from "../utils/json.js";
 
 export default new Event({
   name: "messageCreate",
@@ -10,29 +9,27 @@ export default new Event({
 
     let data: Messages | null = null;
     try {
-      data = readJsonFile<Messages>(`../../data/messages/${message.author.id}-${message.guild.id}.json`);
+      data = readJsonFile<Messages>(
+        `../../data/messages/${message.author.id}-${message.guild.id}.json`
+      );
     } catch {
       // data is null
     }
 
     if (!data)
-      fs.writeFileSync(
+      writeToJsonFile<Messages>(
         `./data/messages/${message.author.id}-${message.guild.id}.json`,
-        JSON.stringify(
-          {
-            messages: 1,
-            characters: message.content.split("").length,
-          },
-          null,
-          2
-        )
+        {
+          messages: 1,
+          characters: message.content.split("").length,
+        }
       );
     else {
       data.messages += 1;
       data.characters += message.content.split("").length;
-      fs.writeFileSync(
+      writeToJsonFile(
         `./data/messages/${message.author.id}-${message.guild.id}.json`,
-        JSON.stringify(data, null, 2)
+        data
       );
     }
   },

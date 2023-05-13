@@ -1,7 +1,7 @@
 import fs from "fs";
 import { Event } from "../structures/Event.js";
 import type { Channel } from "../types/Channel.js";
-import { readJsonFile } from "../utils/readJsonFile.js";
+import { readJsonFile, writeToJsonFile } from "../utils/json.js";
 
 export default new Event({
   name: "channelDelete",
@@ -11,7 +11,7 @@ export default new Event({
     const channels = fs
       .readdirSync("./data/channels")
       .filter((file) =>
-        (readJsonFile<Channel>(`../../data/channels/${file}`)).guilds.find(
+        readJsonFile<Channel>(`../../data/channels/${file}`).guilds.find(
           (x) => x.id === channel.guild.id && x.channel === channel.id
         )
       );
@@ -23,10 +23,7 @@ export default new Event({
           (x) => x.id !== channel.guild.id && x.channel !== channel.id
         );
         data.guilds = filteredGuilds;
-        fs.writeFileSync(
-          `./data/channels/${ytChannel}`,
-          JSON.stringify(data, null, 2)
-        );
+        writeToJsonFile(`./data/channels/${ytChannel}`, data);
       }
     }
   },

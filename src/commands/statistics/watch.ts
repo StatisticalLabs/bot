@@ -12,7 +12,7 @@ import type { Channel } from "../../types/Channel.js";
 import { abbreviate } from "../../utils/abbreviate.js";
 // import { checkChannel } from "../../utils/checkChannel";
 import { getChannelData } from "../../utils/getChannelData.js";
-import { readJsonFile } from "../../utils/readJsonFile.js";
+import { readJsonFile, writeToJsonFile } from "../../utils/json.js";
 import { validateChannel } from "../../utils/validateChannel.js";
 
 export default new Command({
@@ -90,7 +90,7 @@ export default new Command({
     const serverChannels = fs
       .readdirSync("./data/channels")
       .filter((file) =>
-        (readJsonFile<Channel>(`../../../data/channels/${file}`)).guilds.find(
+        readJsonFile<Channel>(`../../../data/channels/${file}`).guilds.find(
           (x) => x.id === interaction.guild.id
         )
       );
@@ -110,22 +110,16 @@ export default new Command({
 
     const allChannels = fs.readdirSync("./data/channels");
     const thisChannel = allChannels.find((x) => x.split(".json")[0] === id);
-    if (!thisChannel) {
-      fs.writeFileSync(
-        `./data/channels/${id}.json`,
-        JSON.stringify(
-          {
-            name: data.title,
-            lastCount: data.stats.subscriberCount,
-            lastSubsPerDay: 0,
-            lastAPIUpdate: 0,
-            guilds: [{ id: interaction.guild.id, channel: channel.id }],
-          },
-          null,
-          2
-        )
-      );
-    } else {
+    if (!thisChannel)
+      writeToJsonFile<Channel>(`./data/channels/${id}.json`, {
+        name: data.title,
+        lastCount: data.stats.subscriberCount,
+        lastSubsPerDay: 0,
+        lastAPIUpdate: 0,
+        guilds: [{ id: interaction.guild.id, channel: channel.id }],
+        previousUpdates: [],
+      });
+    else {
       const data = readJsonFile<Channel>(`../../../data/channels/${id}.json`);
       if (
         data.guilds.find(
@@ -145,10 +139,7 @@ export default new Command({
         id: interaction.guild.id,
         channel: channel.id,
       });
-      fs.writeFileSync(
-        `./data/channels/${id}.json`,
-        JSON.stringify(data, null, 2)
-      );
+      writeToJsonFile(`./data/channels/${id}.json`, data);
     }
 
     interaction.followUp({

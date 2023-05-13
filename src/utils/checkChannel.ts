@@ -5,13 +5,12 @@ import {
   ButtonStyle,
   EmbedBuilder,
 } from "discord.js";
-import fs from "fs";
 import parseMs from "parse-ms";
 import type { BotClient } from "../structures/Client.js";
 import type { Channel } from "../types/Channel.js";
 import { abbreviate } from "./abbreviate.js";
 import { getChannelData } from "./getChannelData.js";
-import { readJsonFile } from "./readJsonFile.js";
+import { readJsonFile, writeToJsonFile } from "./json.js";
 
 function convertToReadable(timestamp: number) {
   const pluralize = (word: string, count: number) =>
@@ -138,10 +137,7 @@ export async function checkChannel(client: BotClient<true>, id: string) {
         count: data.stats.subscriberCount,
         subsPerDay,
       });
-    fs.writeFileSync(
-      `./data/channels/${id}.json`,
-      JSON.stringify(channel, null, 2)
-    );
+    writeToJsonFile(`./data/channels/${id}.json`, channel);
 
     for (const channelGuild of channel.guilds) {
       const guild = client.guilds.cache.get(channelGuild.id);
