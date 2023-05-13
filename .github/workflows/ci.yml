@@ -12,7 +12,7 @@ jobs:
         with:
           node-version: 16.x
       - uses: dorny/paths-filter@v2
-        id: filter
+        id: changes
         with:
           filters: |
             src:
@@ -32,7 +32,7 @@ jobs:
         with:
           node-version: 16.x
       - uses: dorny/paths-filter@v2
-        id: filter
+        id: changes
         with:
           filters: |
             src:
