@@ -1,5 +1,9 @@
 dist/
 data/
 js/
-node_modules/
 .env
+
+node_modules
+package-lock.json
+yarn.lock
+pnpm-lock.yaml

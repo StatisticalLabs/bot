@@ -1,6 +1,7 @@
 # project-specific
 /dist
 /js
+/data
 .env*
 
 # node-specific
