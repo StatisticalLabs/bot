@@ -3,9 +3,9 @@ import {
   PermissionFlagsBits,
   SlashCommandBuilder,
 } from "discord.js";
-import { Command } from "../../structures/Command";
-import type { ServerSettings } from "../../types/ServerSettings";
-import { readJsonFile } from "../../utils/json";
+import { Command } from "../../structures/Command.js";
+import type { ServerSettings } from "../../types/ServerSettings.js";
+import { readJsonFile, writeToJsonFile } from "../../utils/json.js";
 
 export default new Command({
   data: new SlashCommandBuilder()
@@ -16,7 +16,7 @@ export default new Command({
     let data: ServerSettings = { trackStats: true };
     try {
       data = readJsonFile<ServerSettings>(
-        `../../../data/serverSettings/${interaction.guild.id}`
+        `../../../data/serverSettings/${interaction.guild.id}.json`
       );
     } catch {
       // data is set to a default value
@@ -35,5 +35,10 @@ export default new Command({
       ],
       ephemeral: true,
     });
+
+    writeToJsonFile(
+      `../../../data/serverSettings/${interaction.guild.id}.json`,
+      data
+    );
   },
 });
