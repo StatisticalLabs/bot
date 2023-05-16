@@ -166,7 +166,7 @@ export default new Event({
 
           const milestoneTitle = `${data.title}${
             data.handle ? ` (${data.handle})` : ""
-          } has hit ${abbreviate(data.stats.subscriberCount)}!`;
+          } has hit ${abbreviate(data.stats.subscriberCount)} subscribers!`;
 
           const milestoneEmbed = new EmbedBuilder()
             .setTitle(
