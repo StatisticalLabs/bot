@@ -255,7 +255,10 @@ export default new Event({
             if (!textChannel || !textChannel.isTextBased()) continue;
 
             try {
-              if (channelGuild.milestone) {
+              if (
+                channelGuild.milestone &&
+                data.stats.subscriberCount === channelGuild.milestone
+              ) {
                 textChannel.send({
                   embeds: [milestoneEmbed],
                   components: [
