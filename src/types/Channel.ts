@@ -1,6 +1,7 @@
 export interface Guild {
   id: string;
   channel: string;
+  milestone?: number;
 }
 
 export interface Update {

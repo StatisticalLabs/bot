@@ -164,6 +164,64 @@ export default new Event({
               iconURL: client.user.displayAvatarURL(),
             });
 
+          const milestoneTitle = `${data.title}${
+            data.handle ? ` (${data.handle})` : ""
+          } has hit ${abbreviate(data.stats.subscriberCount)}!`;
+
+          const milestoneEmbed = new EmbedBuilder()
+            .setTitle(
+              milestoneTitle.length > 255
+                ? milestoneTitle.substring(0, 255).concat("-")
+                : milestoneTitle
+            )
+            .setDescription(
+              milestoneTitle.length > 255
+                ? `...${milestoneTitle.slice(255)}`
+                : null
+            )
+            .setURL(`https://youtube.com/channel/${channelID}`)
+            .addFields(
+              {
+                name: "Time",
+                value: `<t:${Math.round(new Date().getTime() / 1000)}:F>`,
+              },
+              {
+                name: "How Long",
+                value: `${convertToReadable(
+                  channel.lastAPIUpdate === 0
+                    ? 0
+                    : new Date().getTime() -
+                        new Date(channel.lastAPIUpdate).getTime()
+                )}`,
+                inline: true,
+              },
+              {
+                name: `Subscribers per day ${
+                  channel.lastSubsPerDay !== 0
+                    ? subsPerDay - channel.lastSubsPerDay < 0
+                      ? "(⬇️)"
+                      : subsPerDay - channel.lastSubsPerDay === 0
+                        ? ""
+                        : "(⬆️)"
+                    : ""
+                }`,
+                value: `${abbreviate(subsPerDay)} (${
+                  subsPerDay === channel.lastSubsPerDay
+                    ? ""
+                    : subsPerDay - channel.lastSubsPerDay < 0
+                      ? ""
+                      : "+"
+                }${abbreviate(subsPerDay - channel.lastSubsPerDay)})`,
+                inline: true,
+              }
+            )
+            .setThumbnail(data.avatar)
+            .setColor("White")
+            .setFooter({
+              text: client.user.username,
+              iconURL: client.user.displayAvatarURL(),
+            });
+
           const lastCount = channel.lastCount;
 
           // backup in case a channel doesn't have a name in the db yet
@@ -197,31 +255,55 @@ export default new Event({
             if (!textChannel || !textChannel.isTextBased()) continue;
 
             try {
-              textChannel.send({
-                // content:
-                //   channel.lastCount === 0
-                //     ? "This is the first time this channel is being watched."
-                //     : "",
-                embeds: [embed],
-                components: [
-                  new ActionRowBuilder<ButtonBuilder>().addComponents(
-                    new ButtonBuilder()
-                      .setCustomId(
-                        `info-${channelID}:${diffTime}:${data.stats.subscriberCount}:${lastCount}`
-                      )
-                      .setLabel("View extra info")
-                      .setStyle(ButtonStyle.Success),
-                    new ButtonBuilder()
-                      .setCustomId(`graph-${channelID}`)
-                      .setLabel("View growth graphs")
-                      .setStyle(ButtonStyle.Primary),
-                    new ButtonBuilder()
-                      .setCustomId(`unwatch-${channelID}`)
-                      .setLabel("Stop watching this channel")
-                      .setStyle(ButtonStyle.Danger)
-                  ),
-                ],
-              });
+              if (channelGuild.milestone) {
+                textChannel.send({
+                  embeds: [milestoneEmbed],
+                  components: [
+                    new ActionRowBuilder<ButtonBuilder>().addComponents(
+                      new ButtonBuilder()
+                        .setCustomId(
+                          `info-${channelID}:${diffTime}:${data.stats.subscriberCount}:${lastCount}`
+                        )
+                        .setLabel("View extra info")
+                        .setStyle(ButtonStyle.Success),
+                      new ButtonBuilder()
+                        .setCustomId(`graph-${channelID}`)
+                        .setLabel("View growth graphs")
+                        .setStyle(ButtonStyle.Primary),
+                      new ButtonBuilder()
+                        .setCustomId(`unwatch-${channelID}`)
+                        .setLabel("Stop watching this channel")
+                        .setStyle(ButtonStyle.Danger)
+                    ),
+                  ],
+                });
+              } else {
+                textChannel.send({
+                  // content:
+                  //   channel.lastCount === 0
+                  //     ? "This is the first time this channel is being watched."
+                  //     : "",
+                  embeds: [embed],
+                  components: [
+                    new ActionRowBuilder<ButtonBuilder>().addComponents(
+                      new ButtonBuilder()
+                        .setCustomId(
+                          `info-${channelID}:${diffTime}:${data.stats.subscriberCount}:${lastCount}`
+                        )
+                        .setLabel("View extra info")
+                        .setStyle(ButtonStyle.Success),
+                      new ButtonBuilder()
+                        .setCustomId(`graph-${channelID}`)
+                        .setLabel("View growth graphs")
+                        .setStyle(ButtonStyle.Primary),
+                      new ButtonBuilder()
+                        .setCustomId(`unwatch-${channelID}`)
+                        .setLabel("Stop watching this channel")
+                        .setStyle(ButtonStyle.Danger)
+                    ),
+                  ],
+                });
+              }
             } catch (err) {
               console.error(err);
             }
