@@ -1,6 +1,7 @@
 import { Event } from "../structures/Event.js";
 import type { Reactions } from "../types/User.js";
 import { readJsonFile, writeToJsonFile } from "../utils/json.js";
+import { optedOutOfStats } from "../utils/optedOutOfStats.js";
 
 export default new Event({
   name: "messageReactionAdd",
@@ -13,6 +14,8 @@ export default new Event({
     if (reaction.partial) reaction.fetch();
     if (reaction.message.partial) reaction.message.fetch();
     if (user.partial) user.fetch();
+
+    if (optedOutOfStats(reaction.message.guild!.id)) return;
 
     let data: Reactions | null = null;
     try {
