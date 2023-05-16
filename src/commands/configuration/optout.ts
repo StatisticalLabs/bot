@@ -16,7 +16,7 @@ export default new Command({
     let data: ServerSettings = { trackStats: true };
     try {
       data = readJsonFile<ServerSettings>(
-        `../../../data/serversettings/${interaction.guild.id}`
+        `../../../data/serverSettings/${interaction.guild.id}`
       );
     } catch {
       // data is set to a default value
