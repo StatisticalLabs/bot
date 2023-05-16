@@ -29,7 +29,7 @@ export default new Command({
       embeds: [
         new EmbedBuilder()
           .setDescription(
-            `${data.trackStats ? "Enabled" : "Disabled"} server statistics!`
+            `${data.trackStats ? "Disabled" : "Enabled"} server statistics!`
           )
           .setColor("Green"),
       ],
