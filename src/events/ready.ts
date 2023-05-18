@@ -252,7 +252,14 @@ export default new Event({
             if (!guild) continue;
 
             const textChannel = guild.channels.cache.get(channelGuild.channel);
-            if (!textChannel || !textChannel.isTextBased()) continue;
+            if (
+              !textChannel ||
+              !textChannel.isTextBased() ||
+              !textChannel
+                .permissionsFor(guild.members.me!)
+                .has(["SendMessages", "EmbedLinks"])
+            )
+              continue;
 
             try {
               if (
