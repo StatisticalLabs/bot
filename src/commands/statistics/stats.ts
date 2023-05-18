@@ -31,9 +31,6 @@ export default new Command({
         .setName("bot")
         .setDescription("View statistics related to this bot.")
     ),
-  /**
-   * @param {{ client: import('discord.js').Client, interaction: import('discord.js').ChatInputCommandInteraction }} options
-   */
   run: async ({ client, interaction }) => {
     await interaction.deferReply();
 
