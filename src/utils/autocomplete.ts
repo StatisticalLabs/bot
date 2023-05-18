@@ -1,6 +1,6 @@
 import axios, { type AxiosResponse } from "axios";
 import type { AutocompleteInteraction } from "discord.js";
-import { abbreviate } from "./abbreviate";
+import { abbreviate } from "./abbreviate.js";
 
 export async function channelAutocomplete(
   interaction: AutocompleteInteraction
