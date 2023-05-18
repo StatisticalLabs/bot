@@ -1,4 +1,3 @@
-import axios, { type AxiosResponse } from "axios";
 import {
   ChannelType,
   EmbedBuilder,
@@ -9,8 +8,8 @@ import fs from "fs";
 import { CHANNEL_LIMIT } from "../../constants.js";
 import { Command } from "../../structures/Command.js";
 import type { Channel } from "../../types/Channel.js";
-import { abbreviate } from "../../utils/abbreviate.js";
 // import { checkChannel } from "../../utils/checkChannel";
+import { channelAutocomplete } from "../../utils/autocomplete.js";
 import { getChannelData } from "../../utils/getChannelData.js";
 import { readJsonFile, writeToJsonFile } from "../../utils/json.js";
 import { validateChannel } from "../../utils/validateChannel.js";
@@ -36,23 +35,7 @@ export default new Command({
         .setRequired(false)
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
-  autocomplete: async ({ interaction }) => {
-    const focusedValue = interaction.options.getFocused() || "mrbeast";
-    const { data } = await axios.get<
-      any,
-      AxiosResponse<{
-        results: { name: string; id: string; mainCount: number }[];
-      }>
-    >(
-      `https://livecounts.xyz/api/youtube-live-subscriber-count/search/${focusedValue}`
-    );
-    await interaction.respond(
-      data.results.map((channel) => ({
-        name: `${channel.name} • ${abbreviate(channel.mainCount)} subscribers`,
-        value: channel.id,
-      }))
-    );
-  },
+  autocomplete: async ({ interaction }) => channelAutocomplete(interaction),
   run: async ({ /* client, */ interaction }) => {
     await interaction.deferReply({
       ephemeral: true,
