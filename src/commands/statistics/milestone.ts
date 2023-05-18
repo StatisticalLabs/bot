@@ -125,10 +125,7 @@ export default new Command({
       const data = readJsonFile<Channel>(`../../../data/channels/${id}.json`);
       if (
         data.guilds.find(
-          (x) =>
-            x.id === interaction.guild.id &&
-            x.channel === channel.id &&
-            x.milestone === milestone
+          (x) => x.id === interaction.guild.id && x.channel === channel.id
         )
       )
         return interaction.followUp({
