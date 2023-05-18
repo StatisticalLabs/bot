@@ -1,10 +1,18 @@
 import axios from "axios";
 
 export interface ChannelData {
-  stats: { subscriberCount: number };
+  stats: {
+    subscriberCount: number;
+    viewCount: number;
+    videoCount: number;
+  };
   title: string;
   handle?: string;
   avatar: string;
+}
+
+interface NestedChannelData {
+  data: { items: { about: ChannelData }[] };
 }
 
 export async function getChannelData(channelID: string): Promise<ChannelData> {
@@ -13,7 +21,7 @@ export async function getChannelData(channelID: string): Promise<ChannelData> {
       .get(
         `https://yt.lemnoslife.com/noKey/channels?part=snippet,statistics&id=${channelID}`
       )
-      .then(({ data }) => {
+      .then<NestedChannelData>(({ data }) => {
         return {
           data: {
             items: [
@@ -23,6 +31,8 @@ export async function getChannelData(channelID: string): Promise<ChannelData> {
                     subscriberCount: parseInt(
                       data.items[0].statistics.subscriberCount
                     ),
+                    viewCount: parseInt(data.items[0].statistics.viewCount),
+                    videoCount: parseInt(data.items[0].statistics.videoCount),
                   },
                   title: data.items[0].snippet.title,
                   handle: data.items[0].snippet.customUrl,
@@ -34,7 +44,7 @@ export async function getChannelData(channelID: string): Promise<ChannelData> {
               },
             ],
           },
-        };
+        } satisfies NestedChannelData;
       })
       .catch(() => ({
         data: null,
