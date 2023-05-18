@@ -286,6 +286,7 @@ export default new Command({
                   data.handle ? ` (${data.handle})` : ""
                 }`,
                 iconURL: data.avatar,
+                url: `https://youtube.com/channel/${id}`,
               })
               .setDescription(
                 [
