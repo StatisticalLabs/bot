@@ -292,7 +292,7 @@ export default new Event({
                   (x) =>
                     x.id !== guild.id &&
                     x.channel !== textChannel.id &&
-                    x.milestone === channelGuild.milestone
+                    x?.milestone !== channelGuild.milestone
                 );
                 channel.guilds = filteredGuilds;
                 writeToJsonFile(`./data/channels/${channelID}.json`, data);
