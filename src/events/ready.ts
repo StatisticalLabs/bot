@@ -287,6 +287,15 @@ export default new Event({
                     ),
                   ],
                 });
+
+                const filteredGuilds = channel.guilds.filter(
+                  (x) =>
+                    x.id !== guild.id &&
+                    x.channel !== textChannel.id &&
+                    x.milestone === channelGuild.milestone
+                );
+                channel.guilds = filteredGuilds;
+                writeToJsonFile(`./data/channels/${channelID}.json`, data);
               } else {
                 textChannel.send({
                   // content:
