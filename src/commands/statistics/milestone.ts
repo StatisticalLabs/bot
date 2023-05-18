@@ -26,7 +26,7 @@ function unabbreviate(number: string) {
 export default new Command({
   data: new SlashCommandBuilder()
     .setName("milestone")
-    .setDescription("Track for someone")
+    .setDescription("Watch for a specific milestone on a YouTube channel.")
     .addStringOption((option) =>
       option
         .setName("query")
