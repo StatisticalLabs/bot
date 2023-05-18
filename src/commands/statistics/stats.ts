@@ -4,7 +4,11 @@ import { CHANNEL_LIMIT } from "../../constants.js";
 import { Command } from "../../structures/Command.js";
 import type { Channel } from "../../types/Channel.js";
 import type { Messages, Reactions } from "../../types/User.js";
+import { abbreviate } from "../../utils/abbreviate.js";
+import { channelAutocomplete } from "../../utils/autocomplete.js";
+import { getChannelData } from "../../utils/getChannelData.js";
 import { readJsonFile } from "../../utils/json.js";
+import { validateChannel } from "../../utils/validateChannel.js";
 
 export default new Command({
   data: new SlashCommandBuilder()
@@ -30,7 +34,20 @@ export default new Command({
       subcommand
         .setName("bot")
         .setDescription("View statistics related to this bot.")
+    )
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName("channel")
+        .setDescription("View statistics about a specific YouTube channel.")
+        .addStringOption((option) =>
+          option
+            .setName("query")
+            .setDescription("A YouTube channel's name, ID, or URL.")
+            .setAutocomplete(true)
+            .setRequired(true)
+        )
     ),
+  autocomplete: ({ interaction }) => channelAutocomplete(interaction),
   run: async ({ client, interaction }) => {
     await interaction.deferReply();
 
@@ -238,6 +255,48 @@ export default new Command({
                     .length.toLocaleString()}`,
                 ].join("\n")
               )
+              .setColor("White"),
+          ],
+        });
+      }
+      break;
+    case "channel":
+      {
+        const query = interaction.options.getString("query", true);
+        let id = "";
+        const validated = await validateChannel(query);
+        if (validated.error)
+          return interaction.followUp({
+            embeds: [
+              new EmbedBuilder()
+                .setDescription(validated.message)
+                .setColor("Red"),
+            ],
+            ephemeral: true,
+          });
+        else id = validated.id;
+
+        const data = await getChannelData(id);
+
+        interaction.followUp({
+          embeds: [
+            new EmbedBuilder()
+              .setAuthor({
+                name: `${data.title}${
+                  data.handle ? ` (${data.handle})` : ""
+                }`,
+                iconURL: data.avatar,
+              })
+              .setDescription(
+                [
+                  `**Subscribers**: ${abbreviate(
+                    data.stats.subscriberCount
+                  )}`,
+                  `**Views**: ${data.stats.viewCount.toLocaleString()}`,
+                  `**Videos**: ${data.stats.videoCount.toLocaleString()}`,
+                ].join("\n")
+              )
+              .setImage(`https://www.banner.yt/${id}`)
               .setColor("White"),
           ],
         });
