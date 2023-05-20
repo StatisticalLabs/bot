@@ -285,7 +285,7 @@ export default new Event({
                       new ButtonBuilder()
                         .setCustomId(`graph-${channelID}`)
                         .setLabel("View growth graphs")
-                        .setStyle(ButtonStyle.Primary),
+                        .setStyle(ButtonStyle.Primary)
                     ),
                   ],
                 });
@@ -297,7 +297,7 @@ export default new Event({
                     x?.milestone !== channelGuild.milestone
                 );
                 channel.guilds = filteredGuilds;
-                writeToJsonFile(`./data/channels/${channelID}.json`, data);
+                writeToJsonFile(`./data/channels/${channelID}.json`, channel);
               } else {
                 textChannel.send({
                   // content:
