@@ -186,6 +186,12 @@ export default new Event({
                 value: `<t:${Math.round(new Date().getTime() / 1000)}:F>`,
               },
               {
+                name: "Last Update Time",
+                value: `<t:${Math.round(
+                  new Date(channel.lastAPIUpdate).getTime() / 1000
+                )}:F>`,
+              },
+              {
                 name: "How Long",
                 value: `${convertToReadable(
                   channel.lastAPIUpdate === 0
@@ -280,10 +286,6 @@ export default new Event({
                         .setCustomId(`graph-${channelID}`)
                         .setLabel("View growth graphs")
                         .setStyle(ButtonStyle.Primary),
-                      new ButtonBuilder()
-                        .setCustomId(`unwatch-${channelID}`)
-                        .setLabel("Stop watching this channel")
-                        .setStyle(ButtonStyle.Danger)
                     ),
                   ],
                 });
