@@ -21,3 +21,9 @@ const client = new BotClient({
 
 client.connect();
 client.register();
+
+import process from "node:process";
+
+process.on("unhandledRejection", (err) => console.error(err));
+process.on("uncaughtException", (err) => console.error(err));
+process.on("uncaughtExceptionMonitor", (err) => console.error(err));
