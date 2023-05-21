@@ -124,6 +124,10 @@ export default new Event({
           }**${data.handle ? ` (${data.handle})` : ""}.`,
         });
       } else if (interaction.customId.startsWith("info-")) {
+        await interaction.deferReply({
+          ephemeral: true,
+        });
+
         const [channelID, ...info] = interaction.customId
           .split("info-")[1]
           .split(":");
@@ -145,7 +149,7 @@ export default new Event({
 
         const data = await getChannelData(channelID);
 
-        interaction.reply({
+        interaction.followUp({
           embeds: [
             new EmbedBuilder()
               .setAuthor({
@@ -168,7 +172,6 @@ export default new Event({
                 text: "Keep in mind that these are just averages based on the current growth.",
               }),
           ],
-          ephemeral: true,
         });
       } else if (interaction.customId.startsWith("graph-")) {
         const channelID = interaction.customId.split("graph-")[1];
