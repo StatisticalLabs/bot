@@ -13,6 +13,7 @@ import { Event } from "../structures/Event.js";
 import type { Channel } from "../types/Channel.js";
 import { abbreviate } from "../utils/abbreviate.js";
 // import { checkChannel } from "../utils/checkChannel";
+import { env } from "../utils/env.js";
 import { getChannelData } from "../utils/getChannelData.js";
 import { readJsonFile, writeToJsonFile } from "../utils/json.js";
 
@@ -63,18 +64,18 @@ export default new Event({
     //   );
     // }
 
-    new CronJob(
-      "* * * * *",
-      () => {
-        axios.get(
-          "https://betteruptime.com/api/v1/heartbeat/nzJCVZxiETyCdgZkqn798NC8"
-        );
-        console.log("Sent status to BetterUptime.");
-      },
-      null,
-      true,
-      "America/Los_Angeles"
-    );
+    if (env.BETTERUPTIME_URL) {
+      new CronJob(
+        "* * * * *",
+        () => {
+          axios.get(env.BETTERUPTIME_URL!);
+          console.log("Sent status to BetterUptime.");
+        },
+        null,
+        true,
+        "America/Los_Angeles"
+      );
+    }
 
     async function checkChannels() {
       const allChannels = fs.readdirSync("./data/channels");

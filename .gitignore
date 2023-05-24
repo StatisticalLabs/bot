@@ -1,5 +1,5 @@
 dist/
-data/
+data/**/*.json
 js/
 .env
 

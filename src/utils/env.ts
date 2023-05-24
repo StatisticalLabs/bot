@@ -5,6 +5,7 @@ const envVariables = z.object({
   TOKEN: z.string(),
   INFINITYBOTS_TOKEN: z.string().optional(),
   TOPGG_TOKEN: z.string().optional(),
+  BETTERUPTIME_URL: z.string().optional(),
 });
 
 const parsed = envVariables.safeParse(process.env);
