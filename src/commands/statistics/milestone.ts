@@ -110,7 +110,9 @@ export default new Command({
     // just for typesafety
     if (!channel || !channel.isTextBased()) return;
 
-    const allChannels = fs.readdirSync("./data/channels");
+    const allChannels = fs
+      .readdirSync("./data/channels")
+      .filter((file) => file.endsWith(".json"));
     const thisChannel = allChannels.find((x) => x.split(".json")[0] === id);
     if (!thisChannel)
       writeToJsonFile<Channel>(`./data/channels/${id}.json`, {

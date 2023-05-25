@@ -79,7 +79,9 @@ export default new Event({
     }
 
     async function checkChannels() {
-      const allChannels = fs.readdirSync("./data/channels");
+      const allChannels = fs
+        .readdirSync("./data/channels")
+        .filter((file) => file.endsWith(".json"));
       for (const chnl of allChannels) {
         const channel = readJsonFile<Channel>(`../../data/channels/${chnl}`);
         const channelID = chnl.split(".json")[0];

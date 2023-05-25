@@ -51,16 +51,19 @@ export default new Command({
   autocomplete: async ({ interaction }) => {
     const focusedValue = interaction.options.getFocused();
     console.log(focusedValue);
-    const choices = fs.readdirSync("./data/channels").map((file) => {
-      const channel = readJsonFile<Channel>(
-        `../../../../data/channels/${file}`
-      );
-      return {
-        name: channel.name,
-        mainCount: channel.lastCount,
-        id: file.split(".json")[0],
-      };
-    });
+    const choices = fs
+      .readdirSync("./data/channels")
+      .filter((file) => file.endsWith(".json"))
+      .map((file) => {
+        const channel = readJsonFile<Channel>(
+          `../../../../data/channels/${file}`
+        );
+        return {
+          name: channel.name,
+          mainCount: channel.lastCount,
+          id: file.split(".json")[0],
+        };
+      });
     const filtered = choices
       .filter((choice) => {
         return (choice.name || "")

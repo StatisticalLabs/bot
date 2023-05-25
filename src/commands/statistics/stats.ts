@@ -202,20 +202,26 @@ export default new Command({
       break;
     case "bot":
       {
-        const allUsers = fs.readdirSync("./data/messages").map((user) => ({
-          userID: user.split(".json")[0].split("-")[0],
-          ...readJsonFile<Messages>(`../../../data/messages/${user}`),
-        }));
+        const allUsers = fs
+          .readdirSync("./data/messages")
+          .filter((file) => file.endsWith(".json"))
+          .map((user) => ({
+            userID: user.split(".json")[0].split("-")[0],
+            ...readJsonFile<Messages>(`../../../data/messages/${user}`),
+          }));
         const filteredUsers: string[] = [];
         allUsers.forEach((user) => {
           if (filteredUsers.find((x) => x === user.userID)) return;
           else filteredUsers.push(user.userID);
         });
 
-        const allMessages = fs.readdirSync("./data/messages").map((user) => ({
-          userID: user.split(".json")[0],
-          ...readJsonFile<Messages>(`../../../data/messages/${user}`),
-        }));
+        const allMessages = fs
+          .readdirSync("./data/messages")
+          .filter((file) => file.endsWith(".json"))
+          .map((user) => ({
+            userID: user.split(".json")[0],
+            ...readJsonFile<Messages>(`../../../data/messages/${user}`),
+          }));
 
         const globalMessages = allMessages
           .map((user) => user?.messages || 0)
