@@ -87,6 +87,7 @@ export default new Command({
         try {
           globalMessages = fs
             .readdirSync("./data/messages")
+            .filter((file) => file.endsWith(".json"))
             .filter((file) => file.startsWith(user.id))
             .map((user) =>
               readJsonFile<Messages>(`../../../data/messages/${user}`)
@@ -97,6 +98,7 @@ export default new Command({
         try {
           globalReactions = fs
             .readdirSync("./data/reactions")
+            .filter((file) => file.endsWith(".json"))
             .filter((file) => file.startsWith(user.id))
             .map((user) =>
               readJsonFile<Reactions>(`../../../data/reactions/${user}`)
@@ -149,6 +151,7 @@ export default new Command({
       {
         const serverMessages = fs
           .readdirSync("./data/messages")
+          .filter((file) => file.endsWith(".json"))
           .filter((file) =>
             file.split(".json")[0].endsWith(interaction.guild.id)
           )
@@ -157,6 +160,7 @@ export default new Command({
           );
         const serverReactions = fs
           .readdirSync("./data/reactions")
+          .filter((file) => file.endsWith(".json"))
           .filter((file) =>
             file.split(".json")[0].endsWith(interaction.guild.id)
           )
@@ -165,6 +169,7 @@ export default new Command({
           );
         const serverChannels = fs
           .readdirSync("./data/channels")
+          .filter((file) => file.endsWith(".json"))
           .filter((file) =>
             readJsonFile<Channel>(
               `../../../data/channels/${file}`
@@ -232,6 +237,7 @@ export default new Command({
 
         const allReactions = fs
           .readdirSync("./data/reactions")
+          .filter((file) => file.endsWith(".json"))
           .map((user) =>
             readJsonFile<Reactions>(`../../../data/reactions/${user}`)
           )
