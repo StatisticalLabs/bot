@@ -59,7 +59,9 @@ export default new Command({
 
     const data = await getChannelData(id);
 
-    const allChannels = fs.readdirSync("./data/channels");
+    const allChannels = fs
+      .readdirSync("./data/channels")
+      .filter((file) => file.endsWith(".json"));
     const thisChannel = allChannels.find((x) => x.split(".json")[0] === id);
     if (!thisChannel)
       return interaction.followUp({
