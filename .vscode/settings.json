@@ -7,5 +7,6 @@
   "vs-code-prettier-eslint.prettierLast": false,
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
-  "editor.detectIndentation": false
+  "editor.detectIndentation": false,
+  "prettier.prettierPath": "./node_modules/prettier"
 }
