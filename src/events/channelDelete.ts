@@ -9,7 +9,7 @@ export default new Event({
     if (!channel.isTextBased() || channel.isDMBased()) return;
 
     const channels = fs
-      .readdirSync("./data/channels")
+      .readdirSync("./data/channels").filter((file) => file.endsWith(".json"))
       .filter((file) =>
         readJsonFile<Channel>(`../../data/channels/${file}`).guilds.find(
           (x) => x.id === channel.guild.id && x.channel === channel.id

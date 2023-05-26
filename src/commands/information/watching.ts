@@ -36,6 +36,7 @@ export default new Command({
 
     const allChannels = fs
       .readdirSync("./data/channels")
+      .filter((file) => file.endsWith(".json"))
       .map((channelID) => ({
         channelID: channelID.split(".json")[0],
         ...readJsonFile<Channel>(`../../../data/channels/${channelID}`),

@@ -72,6 +72,7 @@ export default new Command({
 
     const serverChannels = fs
       .readdirSync("./data/channels")
+      .filter((file) => file.endsWith(".json"))
       .filter((file) =>
         readJsonFile<Channel>(`../../../data/channels/${file}`).guilds.find(
           (x) => x.id === interaction.guild.id

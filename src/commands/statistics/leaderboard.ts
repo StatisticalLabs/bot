@@ -65,12 +65,14 @@ export default new Command({
       {
         const allMessageUsers = fs
           .readdirSync("./data/messages")
+          .filter((file) => file.endsWith(".json"))
           .map((user) => ({
             userID: user.split(".json")[0].split("-")[0],
             ...readJsonFile<any>(`../../../../data/messages/${user}`),
           }));
         const allReactionUsers = fs
           .readdirSync("./data/reactions")
+          .filter((file) => file.endsWith(".json"))
           .map((user) => ({
             userID: user.split(".json")[0].split("-")[0],
             ...readJsonFile<any>(`../../../data/reactions/${user}`),
@@ -243,6 +245,7 @@ export default new Command({
       {
         const allMessageUsers = fs
           .readdirSync("./data/messages")
+          .filter((file) => file.endsWith(".json"))
           .filter((file) =>
             file.split(".json")[0].endsWith(interaction.guild.id)
           )
@@ -251,7 +254,7 @@ export default new Command({
             ...readJsonFile<any>(`../../../data/messages/${user}`),
           }));
         const allReactionUsers = fs
-          .readdirSync("./data/reactions")
+          .readdirSync("./data/reactions").filter((file) => file.endsWith(".json"))
           .filter((file) =>
             file.split(".json")[0].endsWith(interaction.guild.id)
           )
