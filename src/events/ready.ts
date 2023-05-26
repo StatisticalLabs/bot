@@ -86,10 +86,7 @@ export default new Event({
         const channel = readJsonFile<Channel>(`../../data/channels/${chnl}`);
         const channelID = chnl.split(".json")[0];
         try {
-          const data = await getChannelData(channelID).catch((err) => {
-            console.log(err);
-            return null;
-          });
+          const data = await getChannelData(channelID).catch(() => null);
           if (!data) continue;
           validateChannel(client, data, channel, channelID);
         } catch (err) {
