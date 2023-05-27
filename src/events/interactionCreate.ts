@@ -59,8 +59,12 @@ export default new Event({
       }
     } else if (interaction.isButton()) {
       if (interaction.customId.startsWith("unwatch-")) {
+        await interaction.deferReply({
+          ephemeral: true,
+        });
+
         if (!(interaction.member as GuildMember).permissions.has("ManageGuild"))
-          return interaction.reply({
+          return interaction.followUp({
             embeds: [
               new EmbedBuilder()
                 .setDescription(
@@ -68,17 +72,18 @@ export default new Event({
                 )
                 .setColor("Red"),
             ],
-            ephemeral: true,
           });
 
         const id = interaction.customId.split("unwatch-")[1];
 
         const data = await getChannelData(id);
 
-        const allChannels = fs.readdirSync("./data/channels").filter((file) => file.endsWith(".json"));
+        const allChannels = fs
+          .readdirSync("./data/channels")
+          .filter((file) => file.endsWith(".json"));
         const thisChannel = allChannels.find((x) => x.split(".json")[0] === id);
         if (!thisChannel)
-          return interaction.reply({
+          return interaction.followUp({
             embeds: [
               new EmbedBuilder()
                 .setDescription("That channel has never been watched.")
@@ -88,7 +93,7 @@ export default new Event({
         else {
           const data = readJsonFile<Channel>(`../../data/channels/${id}.json`);
           if (!data.guilds.find((x) => x.id === interaction.guild!.id))
-            return interaction.reply({
+            return interaction.followUp({
               embeds: [
                 new EmbedBuilder()
                   .setDescription(
@@ -96,7 +101,6 @@ export default new Event({
                   )
                   .setColor("Red"),
               ],
-              ephemeral: true,
             });
           const filteredGuilds = data.guilds.filter(
             (x) => x.id !== interaction.guild!.id
@@ -105,7 +109,7 @@ export default new Event({
           writeToJsonFile(`./data/channels/${id}.json`, data);
         }
 
-        interaction.reply({
+        interaction.followUp({
           embeds: [
             new EmbedBuilder()
               .setAuthor({
@@ -115,7 +119,6 @@ export default new Event({
               .setDescription("Stopped tracking.")
               .setColor("White"),
           ],
-          ephemeral: true,
         });
 
         interaction.channel!.send({
@@ -174,9 +177,13 @@ export default new Event({
           ],
         });
       } else if (interaction.customId.startsWith("graph-")) {
+        await interaction.deferReply({
+          ephemeral: true,
+        });
+
         const channelID = interaction.customId.split("graph-")[1];
 
-        const msg = await interaction.reply({
+        const msg = await interaction.followUp({
           content: "Select a graph type:",
           components: [
             new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -199,15 +206,15 @@ export default new Event({
         });
 
         collector.on("collect", async (i) => {
+          await i.deferReply({
+            ephemeral: true,
+          });
+
           if (i.customId.startsWith("allsubgraph-")) {
             const channelID = i.customId.split("allsubgraph-")[1];
             const data = readJsonFile<Channel>(
               `../../data/channels/${channelID}.json`
             );
-
-            await i.deferReply({
-              ephemeral: true,
-            });
 
             const configuration = {
               type: "line",
@@ -272,10 +279,6 @@ export default new Event({
             const data = readJsonFile<Channel>(
               `../../data/channels/${channelID}.json`
             );
-
-            await i.deferReply({
-              ephemeral: true,
-            });
 
             const configuration = {
               type: "line",
