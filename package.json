@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "start:prod": "node ./dist/index.js",
+    "start:prod": "node --max-old-space-size=4096 ./dist/index.js",
     "dev": "nodemon src/index.ts",
     "build": "tsc",
     "typecheck": "tsc --noEmit",
