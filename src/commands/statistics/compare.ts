@@ -161,13 +161,11 @@ export default new Command({
 
     const data = ids.map((channelID) => {
       const channel = readJsonFile<Channel>(
-        `../../../../data/channels/${channelID}`
+        `../../../../data/channels/${channelID}.json`
       );
 
       return channel;
     });
-
-    console.log(data.map((channel) => channel.previousUpdates));
 
     const configuration = {
       type: "line",
