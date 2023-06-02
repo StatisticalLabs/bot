@@ -152,6 +152,19 @@ export default new Event({
 
         const data = await getChannelData(channelID);
 
+        const allChannels = fs
+          .readdirSync("./data/channels")
+          .filter((file) => file.endsWith(".json"))
+          .filter((x) => x.split(".json")[0] !== channelID)
+          .map((file) => readJsonFile<Channel>(`../../data/channels/${file}`));
+
+        const channelsWithSameCount = allChannels.filter(
+          (channel) => channel.lastCount === currentCount
+        );
+        const channelsPassed = allChannels.filter(
+          (channel) => channel.lastCount === lastCount
+        );
+
         interaction.followUp({
           embeds: [
             new EmbedBuilder()
@@ -168,7 +181,23 @@ export default new Event({
                   `**Subscribers/week**: ${abbreviate(subsPerWeek)}`,
                   `**Subscribers/30 days**: ${abbreviate(subsPerMonth)}`,
                   `**Subscribers/year**: ${abbreviate(subsPerYear)}`,
-                ].join("\n")
+                  channelsWithSameCount.length
+                    ? `**Channels with the same API count** (${
+                      channelsWithSameCount.length
+                    }): ${channelsWithSameCount
+                      .map((channel) => channel.name)
+                      .join(", ")}`
+                    : null,
+                  channelsPassed.length
+                    ? `**Channels passed** (${
+                      channelsPassed.length
+                    }): ${channelsPassed
+                      .map((channel) => channel.name)
+                      .join(", ")}`
+                    : null,
+                ]
+                  .filter(Boolean)
+                  .join("\n")
               )
               .setColor("White")
               .setFooter({
