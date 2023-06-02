@@ -5,6 +5,7 @@ import {
   ButtonBuilder,
   ButtonStyle,
   EmbedBuilder,
+  time,
 } from "discord.js";
 import fs from "fs";
 import parseMs from "parse-ms";
@@ -195,13 +196,11 @@ function sendUpdates(
     .addFields(
       {
         name: "Time",
-        value: `<t:${Math.round(new Date().getTime() / 1000)}:F>`,
+        value: time(new Date(), "F"),
       },
       {
         name: "Last Update Time",
-        value: `<t:${Math.round(
-          new Date(channel.lastAPIUpdate).getTime() / 1000
-        )}:F>`,
+        value: time(new Date(channel.lastAPIUpdate), "F"),
       },
       {
         name: "How Long",
