@@ -274,16 +274,16 @@ function validateChannel(
       !textChannel.isTextBased() ||
       !textChannel
         .permissionsFor(guild.members.me!)
-        .has(["SendMessages", "EmbedLinks"])
+        .has(["SendMessages", "EmbedLinks", "AttachFiles"])
     )
       return;
 
-    try {
-      if (
-        channelGuild.milestone &&
-        data.stats.subscriberCount === channelGuild.milestone
-      ) {
-        textChannel.send({
+    if (
+      channelGuild.milestone &&
+      data.stats.subscriberCount === channelGuild.milestone
+    ) {
+      textChannel
+        .send({
           embeds: [milestoneEmbed],
           components: [
             new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -299,18 +299,20 @@ function validateChannel(
                 .setStyle(ButtonStyle.Primary)
             ),
           ],
-        });
+        })
+        .catch((err) => console.error(err));
 
-        const filteredGuilds = channel.guilds.filter(
-          (x) =>
-            x.id !== guild.id &&
-            x.channel !== textChannel.id &&
-            x?.milestone !== channelGuild.milestone
-        );
-        channel.guilds = filteredGuilds;
-        writeToJsonFile(`./data/channels/${channelID}.json`, channel);
-      } else {
-        textChannel.send({
+      const filteredGuilds = channel.guilds.filter(
+        (x) =>
+          x.id !== guild.id &&
+          x.channel !== textChannel.id &&
+          x?.milestone !== channelGuild.milestone
+      );
+      channel.guilds = filteredGuilds;
+      writeToJsonFile(`./data/channels/${channelID}.json`, channel);
+    } else {
+      textChannel
+        .send({
           // content:
           //   channel.lastCount === 0
           //     ? "This is the first time this channel is being watched."
@@ -334,10 +336,8 @@ function validateChannel(
                 .setStyle(ButtonStyle.Danger)
             ),
           ],
-        });
-      }
-    } catch (err) {
-      console.error(err);
+        })
+        .catch((err) => console.error(err));
     }
   }
 }
