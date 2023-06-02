@@ -88,7 +88,8 @@ export default new Event({
         try {
           const data = await getChannelData(channelID).catch(() => null);
           if (!data) continue;
-          validateChannel(client, data, channel, channelID);
+          if (channel.lastCount === data.stats.subscriberCount) continue;
+          sendUpdates(client, data, channel, channelID);
         } catch (err) {
           if (err instanceof AxiosError && err.response?.status === 520)
             continue;
@@ -100,14 +101,12 @@ export default new Event({
   },
 });
 
-function validateChannel(
+function sendUpdates(
   client: BotClient<true>,
   data: ChannelData,
   channel: Channel,
   channelID: string
 ) {
-  if (channel.lastCount === data.stats.subscriberCount) return;
-
   const diffTime = Math.abs(
     new Date().getTime() - new Date(channel.lastAPIUpdate).getTime()
   );
