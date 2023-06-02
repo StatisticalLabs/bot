@@ -155,6 +155,7 @@ export default new Event({
         const allChannels = fs
           .readdirSync("./data/channels")
           .filter((file) => file.endsWith(".json"))
+          .filter((x) => x.split(".json")[0] !== channelID)
           .map((file) => readJsonFile<Channel>(`../../data/channels/${file}`));
 
         const channelsWithSameCount = allChannels.filter(
