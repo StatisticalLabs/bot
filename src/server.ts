@@ -22,6 +22,7 @@ export default (_client: BotClient) => {
       });
     res.json({
       name: data.name,
+      lastCount: data.lastCount,
       previousUpdates: data.previousUpdates.filter(
         (update) => update.time && update.count && update.subsPerDay
       ),
