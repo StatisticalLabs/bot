@@ -274,7 +274,7 @@ function validateChannel(
       !textChannel.isTextBased() ||
       !textChannel
         .permissionsFor(guild.members.me!)
-        .has(["SendMessages", "EmbedLinks", "AttachFiles"])
+        .has(["SendMessages", "EmbedLinks"])
     )
       return;
 
