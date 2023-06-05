@@ -20,6 +20,7 @@
     "@infinitybots/autoposter": "^0.0.4",
     "axios": "^1.4.0",
     "chart.js": "^3.9.1",
+    "chartjs-adapter-moment": "^1.0.1",
     "chartjs-node-canvas": "^4.1.6",
     "cheerio": "^1.0.0-rc.12",
     "cors": "^2.8.5",
@@ -27,6 +28,7 @@
     "discord.js": "^14.11.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "moment": "^2.29.4",
     "parse-ms": "^3.0.0",
     "topgg-autoposter": "^2.0.1",
     "zod": "^3.21.4"

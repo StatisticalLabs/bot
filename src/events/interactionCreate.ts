@@ -1,4 +1,3 @@
-import type { ChartConfiguration } from "chart.js";
 import { ChartJSNodeCanvas } from "chartjs-node-canvas";
 import type { GuildMember } from "discord.js";
 import {
@@ -15,6 +14,7 @@ import { Event } from "../structures/Event.js";
 import type { Channel } from "../types/Channel.js";
 import { abbreviate } from "../utils/abbreviate.js";
 import { getChannelData } from "../utils/getChannelData.js";
+import { graphConfiguration } from "../utils/graphConfiguration.js";
 import { readJsonFile, writeToJsonFile } from "../utils/json.js";
 
 const width = 400; //px
@@ -24,6 +24,9 @@ const chartJSNodeCanvas = new ChartJSNodeCanvas({
   width,
   height,
   backgroundColour,
+  plugins: {
+    modern: ["chartjs-adapter-moment"],
+  },
 });
 
 export default new Event({
@@ -245,51 +248,21 @@ export default new Event({
               `../../data/channels/${channelID}.json`
             );
 
-            const configuration = {
-              type: "line",
-              data: {
-                labels: data.previousUpdates.map((update) =>
-                  new Date(update.time)
-                    .toLocaleString("en-CA", {
-                      month: "2-digit",
-                      day: "2-digit",
-                      year: "numeric",
-                      hour: "numeric",
-                      minute: "numeric",
-                      hour12: false,
-                      timeZone: "UTC",
-                    })
-                    .split(", ")
-                    .join(" ")
-                ),
-                datasets: [
-                  {
-                    label: data.name,
-                    data: data.previousUpdates.map((update) => update.count),
-                    backgroundColor: "rgb(255, 99, 132)",
-                    borderColor: "rgb(255, 99, 132)",
-                    tension: 0.1,
-                    pointRadius: 2.4,
-                  },
-                ],
-              },
-              options: {
-                scales: {
-                  x: {
-                    grid: {
-                      color: "transparent",
-                      borderColor: "transparent",
-                    },
-                  },
-                  y: {
-                    grid: {
-                      color: "transparent",
-                      borderColor: "transparent",
-                    },
-                  },
+            const configuration = graphConfiguration({
+              labels: data.previousUpdates.map(
+                (update) => new Date(update.time)
+              ),
+              datasets: [
+                {
+                  label: data.name,
+                  data: data.previousUpdates.map((update) => update.count),
+                  backgroundColor: "rgb(255, 99, 132)",
+                  borderColor: "rgb(255, 99, 132)",
+                  tension: 0.1,
+                  pointRadius: 2.4,
                 },
-              },
-            } satisfies ChartConfiguration;
+              ],
+            });
 
             const imageBuffer = await chartJSNodeCanvas.renderToBuffer(
               configuration
@@ -309,55 +282,23 @@ export default new Event({
               `../../data/channels/${channelID}.json`
             );
 
-            const configuration = {
-              type: "line",
-              data: {
-                labels: data.previousUpdates
-                  .filter((update) => update.subsPerDay)
-                  .map((update) =>
-                    new Date(update.time)
-                      .toLocaleString("en-CA", {
-                        month: "2-digit",
-                        day: "2-digit",
-                        year: "numeric",
-                        hour: "numeric",
-                        minute: "numeric",
-                        hour12: false,
-                        timeZone: "UTC",
-                      })
-                      .split(", ")
-                      .join(" ")
-                  ),
-                datasets: [
-                  {
-                    label: data.name,
-                    data: data.previousUpdates
-                      .map((update) => update.subsPerDay || null)
-                      .filter((x) => x),
-                    backgroundColor: "rgb(255, 99, 132)",
-                    borderColor: "rgb(255, 99, 132)",
-                    tension: 0.1,
-                    pointRadius: 2.4,
-                  },
-                ],
-              },
-              options: {
-                scales: {
-                  x: {
-                    grid: {
-                      color: "transparent",
-                      borderColor: "transparent",
-                    },
-                  },
-                  y: {
-                    grid: {
-                      color: "transparent",
-                      borderColor: "transparent",
-                    },
-                  },
+            const configuration = graphConfiguration({
+              labels: data.previousUpdates
+                .filter((update) => update.subsPerDay)
+                .map((update) => new Date(update.time)),
+              datasets: [
+                {
+                  label: data.name,
+                  data: data.previousUpdates
+                    .map((update) => update.subsPerDay || null)
+                    .filter((x) => x),
+                  backgroundColor: "rgb(255, 99, 132)",
+                  borderColor: "rgb(255, 99, 132)",
+                  tension: 0.1,
+                  pointRadius: 2.4,
                 },
-              },
-            } satisfies ChartConfiguration;
+              ],
+            });
 
             const imageBuffer = await chartJSNodeCanvas.renderToBuffer(
               configuration
