@@ -1,5 +1,4 @@
 import axios from "axios";
-import type { ChartConfiguration } from "chart.js";
 import { ChartJSNodeCanvas } from "chartjs-node-canvas";
 import {
   AttachmentBuilder,
@@ -10,6 +9,7 @@ import fs from "fs";
 import { Command } from "../../structures/Command.js";
 import type { Channel } from "../../types/Channel.js";
 import { abbreviate } from "../../utils/abbreviate.js";
+import { graphConfiguration } from "../../utils/graphConfiguration.js";
 import { readJsonFile } from "../../utils/json.js";
 import { handleUrl, legacyUrl } from "../../utils/regex.js";
 
@@ -20,6 +20,9 @@ const chartJSNodeCanvas = new ChartJSNodeCanvas({
   width,
   height,
   backgroundColour,
+  plugins: {
+    modern: ["chartjs-adapter-moment"],
+  },
 });
 const colors = ["rgb(255, 99, 132)", "rgb(54, 162, 235)", "rgb(75, 192, 192)"];
 
@@ -80,9 +83,6 @@ export default new Command({
       }))
     );
   },
-  /**
-   * @param {{ client: import('discord.js').Client, interaction: import('discord.js').ChatInputCommandInteraction }} options
-   */
   run: async ({ interaction }) => {
     await interaction.deferReply({
       ephemeral: true,
@@ -167,56 +167,23 @@ export default new Command({
       return channel;
     });
 
-    const configuration = {
-      type: "line",
-      data: {
-        labels: data[0].previousUpdates.map((update) =>
-          new Date(update.time)
-            .toLocaleString("en-CA", {
-              month: "2-digit",
-              day: "2-digit",
-              year: "numeric",
-              hour: "numeric",
-              minute: "numeric",
-              second: "numeric",
-              hour12: false,
-              timeZone: "UTC",
-            })
-            .split(", ")
-            .join(" ")
-        ),
-        datasets: data.map((channel, index) => ({
-          label: channel.name,
-          data: (
-            channel.previousUpdates || [
-              {
-                time: channel.lastAPIUpdate,
-                count: channel.lastCount,
-              },
-            ]
-          ).map((update) => update.count),
-          backgroundColor: colors[index],
-          borderColor: colors[index],
-          tension: 0.1,
-        })),
-      },
-      options: {
-        scales: {
-          x: {
-            grid: {
-              color: "transparent",
-              borderColor: "transparent",
+    const configuration = graphConfiguration({
+      labels: data[0].previousUpdates.map((update) => new Date(update.time)),
+      datasets: data.map((channel, index) => ({
+        label: channel.name,
+        data: (
+          channel.previousUpdates || [
+            {
+              time: channel.lastAPIUpdate,
+              count: channel.lastCount,
             },
-          },
-          y: {
-            grid: {
-              color: "transparent",
-              borderColor: "transparent",
-            },
-          },
-        },
-      },
-    } satisfies ChartConfiguration;
+          ]
+        ).map((update) => update.count),
+        backgroundColor: colors[index],
+        borderColor: colors[index],
+        tension: 0.1,
+      })),
+    });
 
     const imageBuffer = await chartJSNodeCanvas.renderToBuffer(configuration);
     const attachment = new AttachmentBuilder(imageBuffer, {
