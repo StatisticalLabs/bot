@@ -53,7 +53,7 @@ export default new Event({
     //   "America/Los_Angeles"
     // );
 
-    setInterval(checkChannels, 5 * 1000);
+    setInterval(checkChannels, 10 * 1000);
     // setInterval(reverseCheckChannels, 20 * 1000)
 
     // for (const [channelID] of fs.readdirSync("./data/channels").map((channel) => channel.split('.json'))) {
